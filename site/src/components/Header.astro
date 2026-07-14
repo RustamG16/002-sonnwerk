@@ -1,0 +1,41 @@
+---
+const links = [
+  { href: '/shop/', label: 'Shop' },
+  { href: '/hof/', label: 'Der Hof' },
+];
+---
+<header class="site-header">
+  <div class="wrap bar">
+    <a href="/" class="logo serif"><img src="/logo-mark.png" alt="" width="34" height="34" />SONN<span class="gold">WERK</span></a>
+    <nav>
+      {links.map((l) => <a href={l.href}>{l.label}</a>)}
+      <button type="button" class="cart-btn" data-cart-open aria-label="Warenkorb öffnen">
+        Warenkorb <span class="cart-count" data-cart-count>0</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    background: linear-gradient(to bottom, rgba(13, 20, 8, 0.85), rgba(13, 20, 8, 0));
+    backdrop-filter: blur(2px);
+  }
+  .bar { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+  .logo { font-size: 1.35rem; letter-spacing: 0.14em; display: flex; align-items: center; gap: 10px; }
+  .logo img { width: 34px; height: 34px; }
+  nav { display: flex; align-items: center; gap: clamp(16px, 3vw, 36px); }
+  nav a { font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cream-dim); transition: color 0.2s; }
+  nav a:hover { color: var(--paper); }
+  .cart-btn {
+    background: none; border: 1px solid var(--line); color: var(--paper);
+    padding: 0.45rem 0.9rem; font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase;
+    display: flex; align-items: center; gap: 0.5rem; transition: border-color 0.2s;
+  }
+  .cart-btn:hover { border-color: var(--gold); }
+  .cart-count {
+    background: var(--gold); color: var(--bg); min-width: 1.3em; text-align: center;
+    font-size: 0.75rem; padding: 0.05em 0.3em;
+  }
+</style>

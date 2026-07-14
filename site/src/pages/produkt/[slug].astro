@@ -1,0 +1,125 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import { products, byCategory, euro } from '../../content/site';
+
+export function getStaticPaths() {
+  return products.map((p) => ({ params: { slug: p.slug }, props: { product: p } }));
+}
+const { product } = Astro.props;
+const related = byCategory(product.category).filter((p) => p.slug !== product.slug).slice(0, 3);
+const stars = '★'.repeat(Math.round(product.rating)) + '☆'.repeat(5 - Math.round(product.rating));
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: product.name,
+  description: product.short,
+  image: product.image,
+  offers: { '@type': 'Offer', price: product.price.toFixed(2), priceCurrency: 'EUR', availability: 'https://schema.org/InStock' },
+  aggregateRating: { '@type': 'AggregateRating', ratingValue: product.rating, reviewCount: product.reviews },
+};
+---
+<Base title={`${product.name} | SONNWERK`} description={product.short} jsonLd={jsonLd}>
+  <main class="pdp wrap">
+    <div class="cols">
+      <div class="gallery">
+        <div class="main"><img src={product.image} alt={product.name} width="800" height="800" /></div>
+        <div class="thumbs">
+          {[1, 2, 3].map(() => (
+            <button type="button" class="thumb"><img src={product.image} alt="" loading="lazy" width="200" height="200" /></button>
+          ))}
+        </div>
+      </div>
+
+      <div class="info">
+        <p class="eyebrow">{product.category}</p>
+        <h1 class="serif">{product.name}</h1>
+        <p class="rating"><span class="gold">{stars}</span> <span class="dim">{product.rating} · {product.reviews} Bewertungen</span></p>
+        <p class="price gold">{euro(product.price)}</p>
+        <p class="dim">{product.short}</p>
+
+        <div class="buy">
+          <div class="stepper">
+            <button type="button" data-step="-1" aria-label="weniger">−</button>
+            <input type="number" value="1" min="1" data-qty-input aria-label="Menge" />
+            <button type="button" data-step="1" aria-label="mehr">+</button>
+          </div>
+          <button type="button" class="btn btn--solid btn--wide" data-add-to-cart data-slug={product.slug} data-name={product.name} data-price={product.price}>
+            In den Warenkorb
+          </button>
+        </div>
+
+        <div class="accordion">
+          {[
+            ['Beschreibung', product.description],
+            ['Anwendung', product.anwendung],
+            ['Laboranalyse', product.labor],
+          ].map(([label, body], i) => (
+            <details open={i === 0}>
+              <summary>{label}</summary>
+              <p class="dim">{body}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    {related.length > 0 && (
+      <section class="related">
+        <h2 class="serif">Passt dazu</h2>
+        <div class="grid">{related.map((p) => <ProductCard product={p} />)}</div>
+      </section>
+    )}
+  </main>
+</Base>
+
+<script>
+  document.querySelectorAll('[data-step]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const input = document.querySelector('[data-qty-input]') as HTMLInputElement;
+      input.value = String(Math.max(1, (parseInt(input.value, 10) || 1) + Number((btn as HTMLElement).dataset.step)));
+    });
+  });
+</script>
+
+<style>
+  .pdp { padding: 150px 0 120px; padding-left: clamp(20px, 4vw, 48px); padding-right: clamp(20px, 4vw, 48px); }
+  .cols { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(32px, 5vw, 80px); }
+  .main { background: var(--paper); aspect-ratio: 1; }
+  .main img { width: 100%; height: 100%; object-fit: cover; }
+  .thumbs { display: flex; gap: 12px; margin-top: 12px; }
+  .thumb { background: var(--paper); border: 1px solid transparent; width: 84px; aspect-ratio: 1; padding: 0; }
+  .thumb:hover { border-color: var(--gold); }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+  .info h1 { font-size: clamp(2rem, 4vw, 3rem); margin: 8px 0 10px; }
+  .rating { margin-bottom: 14px; font-size: 0.9rem; }
+  .price { font-size: 1.7rem; font-family: var(--serif); margin-bottom: 16px; }
+  .buy { display: flex; gap: 14px; margin: 28px 0 36px; }
+  .stepper { display: flex; border: 1px solid var(--line); }
+  .stepper button { width: 44px; background: none; border: none; color: var(--paper); font-size: 1.2rem; }
+  .stepper input {
+    width: 52px; text-align: center; background: none; border: none; color: var(--paper);
+    font: inherit; -moz-appearance: textfield; appearance: textfield;
+  }
+  .stepper input::-webkit-outer-spin-button, .stepper input::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+  .accordion details { border-top: 1px solid var(--line); padding: 18px 0; }
+  .accordion details:last-child { border-bottom: 1px solid var(--line); }
+  .accordion summary {
+    cursor: pointer; font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase;
+    list-style: none; display: flex; justify-content: space-between;
+  }
+  .accordion summary::after { content: '+'; color: var(--gold); }
+  .accordion details[open] summary::after { content: '−'; }
+  .accordion p { padding-top: 12px; }
+
+  .related { margin-top: 120px; }
+  .related h2 { margin-bottom: 40px; }
+  .related .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  @media (max-width: 900px) {
+    .cols { grid-template-columns: 1fr; }
+    .related .grid { grid-template-columns: 1fr; }
+  }
+</style>

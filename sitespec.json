@@ -1,0 +1,56 @@
+{
+  "specVersion": "0.1",
+  "buildId": "lab-002-sonnwerk",
+  "archetype": "PRODUCER/craft-commerce (NEW: hybrid JOURNEY-02 + e-com-04)",
+  "grammar": "chained provenance journey (flipbook) → conversion-safe shop (no scroll-jacking below hero)",
+  "brandspecRef": "brandspec.json",
+  "videoBackend": "manual-flow",
+  "shots": [
+    { "id": "journey-1-feld", "type": "flipbook", "prompt": "dawn aerial drift over hemp field, sun breaking horizon", "chain": "final frame -> journey-2 start" },
+    { "id": "journey-2-ernte", "type": "flipbook", "prompt": "descend into rows; hands cutting a plant, macro (real farm still anchor)", "chain": "final frame -> journey-3 start" },
+    { "id": "journey-3-extraktion", "type": "flipbook", "prompt": "interior; golden oil through glass, slow drip macro", "chain": "final frame -> journey-4 start" },
+    { "id": "journey-4-flasche", "type": "flipbook", "prompt": "drop lands; pull back from droplet to finished bottle in golden light (Bitzan still anchor)" },
+    { "id": "loop-horses", "type": "ambient", "prompt": "horses / Kutschenfahrten field work, golden hour" },
+    { "id": "loop-tea", "type": "ambient", "prompt": "tea steam macro, warm light" },
+    { "id": "loop-balm", "type": "ambient", "prompt": "balm texture macro" },
+    { "id": "loop-dogs", "type": "ambient", "prompt": "calm dog, golden light" },
+    { "id": "hover-oel", "type": "hover-loop", "prompt": "subtle turntable/light drift from Bitzan oil still" },
+    { "id": "hover-kosmetik", "type": "hover-loop", "prompt": "subtle light drift, cosmetics still" },
+    { "id": "hover-gel", "type": "hover-loop", "prompt": "subtle light drift, gel still" },
+    { "id": "hover-balsam", "type": "hover-loop", "prompt": "subtle light drift, balm still" },
+    { "id": "hover-tee", "type": "hover-loop", "prompt": "subtle light drift, tea still" },
+    { "id": "hover-tierprodukte", "type": "hover-loop", "prompt": "subtle light drift, pet product still" }
+  ],
+  "frameSpec": {
+    "hero": { "fps": 24, "width": 1600, "webpQuality": 72, "targetPayloadMB": [8, 15], "clips": 4, "loadStrategy": "preload 1-2, lazy-load 3-4 during chapter-1 scroll", "mobile": "clips 1+4 only, crossfade, half-res" }
+  },
+  "scaffold": [
+    "/ (journey hero 4 chapters + right-edge meter HUD -> Warum Sonnwerk -> 6 category cards -> BIO für Hunde band -> quote -> trust -> footer)",
+    "/shop + /shop/[kategorie] (filter grid: Öl, Kosmetik, Gel, Balsam, Tee, Tierprodukte, Merch)",
+    "/produkt/[slug] (gallery, qty/add-to-cart, accordion, reviews, related)",
+    "/hof (Unser Hanf · Arbeit mit dem Pferd · Kutschenfahrten — one scroll story, ambient loops)",
+    "/warenkorb (cart page + drawer; checkout hands off to Woo phase 1)",
+    "legal: /impressum /agb /datenschutz ported 1:1"
+  ],
+  "copySlots": {
+    "heroH1": "Vom Feld in die Flasche.",
+    "heroSub": "Natürlich wirksam. Ehrlich. Für Dich.",
+    "heroCta": "Jetzt bestellen",
+    "shopH1": "Apotheke der Natur",
+    "hofH1": "Vom Samen zum Öl.",
+    "dogBand": "Auch für Deine Begleiter.",
+    "meterLabels": ["FELD", "ERNTE", "EXTRAKTION", "FLASCHE"]
+  },
+  "uniqueness": {
+    "typePairing": "Fraunces (editorial serif) + Space Grotesk (UI)",
+    "layoutMutations": ["right-edge process meter doubles as chapter nav", "cream 'paper' sections breaking the dark journey", "product photos always on cream cards inside dark grid"],
+    "motionSignature": "one unbroken provenance camera journey; everything below-hero is calm ambient loops + hover loops",
+    "texture": "golden-hour amber grade + soft haze + film grain"
+  },
+  "commerce": {
+    "backend": "headless WooCommerce (Store API), build-time product fetch + webhook rebuilds",
+    "phase1": "cart/stock client-side vs Woo; checkout hands off to existing Woo checkout",
+    "risk": "cart CORS/nonce strategy — budget 1 day",
+    "placeholderMode": "until Woo credentials: static catalog in src/content/site.ts flagged placeholder"
+  }
+}

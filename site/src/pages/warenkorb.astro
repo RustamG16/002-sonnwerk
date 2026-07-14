@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+import { checkout } from '../content/site';
+---
+<Base title="Warenkorb | SONNWERK">
+  <main class="cart-page wrap">
+    <p class="eyebrow">Warenkorb</p>
+    <h1>Dein Warenkorb</h1>
+    <div class="items" data-cart-items>
+      <p class="dim">Dein Warenkorb ist leer.</p>
+    </div>
+    <div class="foot">
+      <p class="total serif">Zwischensumme&ensp;<strong class="gold" data-cart-total>€0,00</strong></p>
+      <a class="btn btn--solid" href={checkout.wooCheckoutUrl}>Zur Kasse</a>
+      <p class="dim note">Versand wird an der Kasse berechnet. Phase 1: Kasse läuft über den bestehenden SONNWERK-Shop.</p>
+    </div>
+  </main>
+</Base>
+
+<style>
+  .cart-page { padding: 150px 0 120px; padding-left: clamp(20px, 4vw, 48px); padding-right: clamp(20px, 4vw, 48px); min-height: 70vh; }
+  h1 { margin: 10px 0 48px; }
+  .items { display: flex; flex-direction: column; gap: 18px; max-width: 640px; }
+  .foot { margin-top: 48px; max-width: 640px; }
+  .total { font-size: 1.4rem; margin-bottom: 22px; }
+  .note { font-size: 0.82rem; margin-top: 14px; }
+</style>

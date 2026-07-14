@@ -1,0 +1,40 @@
+---
+import { checkout } from '../content/site';
+---
+<div class="cart-overlay" data-cart-overlay hidden></div>
+<aside class="cart-drawer" data-cart-drawer aria-label="Warenkorb" hidden>
+  <div class="head">
+    <h3>Warenkorb</h3>
+    <button type="button" data-cart-close aria-label="Schließen">×</button>
+  </div>
+  <div class="items" data-cart-items>
+    <p class="dim empty">Dein Warenkorb ist leer.</p>
+  </div>
+  <div class="foot">
+    <p class="total">Zwischensumme <strong data-cart-total>€0,00</strong></p>
+    <a class="btn btn--solid btn--wide" href={checkout.wooCheckoutUrl} data-cart-checkout>Zur Kasse</a>
+    <p class="dim note">Phase 1: Kasse läuft über den bestehenden SONNWERK-Shop.</p>
+  </div>
+</aside>
+
+<style>
+  .cart-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.55); z-index: 98; }
+  .cart-drawer {
+    position: fixed; top: 0; right: 0; bottom: 0; width: min(420px, 92vw); z-index: 99;
+    background: var(--bg); border-left: 1px solid var(--line);
+    display: flex; flex-direction: column; padding: 28px;
+  }
+  .cart-drawer[hidden], .cart-overlay[hidden] { display: none; }
+  .head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .head button { background: none; border: none; color: var(--paper); font-size: 1.8rem; line-height: 1; }
+  .items { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
+  .empty { padding-top: 24px; }
+  .foot { border-top: 1px solid var(--line); padding-top: 20px; }
+  .total { display: flex; justify-content: space-between; margin-bottom: 16px; }
+  .total strong { color: var(--gold); }
+  .note { font-size: 0.78rem; margin-top: 10px; }
+  :global(.cart-line) { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; font-size: 0.95rem; }
+  :global(.cart-line .qty-controls) { display: flex; gap: 8px; align-items: center; }
+  :global(.cart-line button) { background: none; border: 1px solid var(--line); color: var(--paper); width: 24px; height: 24px; line-height: 1; }
+  :global(.cart-line .price) { color: var(--gold); white-space: nowrap; }
+</style>

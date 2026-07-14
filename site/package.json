@@ -1,0 +1,16 @@
+{
+  "name": "sonnwerk-site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "media:placeholders": "python scripts/placeholder-media.py"
+  },
+  "dependencies": {
+    "astro": "^4.16.18",
+    "lenis": "^1.1.14"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "specVersion": "0.1",
+  "client": "SONNWERK (sonn-werk.at)",
+  "name": "SONNWERK",
+  "oneLiner": "BIO-CBD vom eigenen Hofkollektiv — vom Feld in die Flasche.",
+  "audience": "Gesundheitsbewusste 30–60 in AT/DE + Tierbesitzer (Hunde/Pferde)",
+  "differentiator": "Eigenanbau, Handarbeit, Pferd statt Traktor, Labor-Transparenz („wenn 11% draufsteht, sind 11% drin\")",
+  "mood": "Golden-hour Hofdoku: warm, ruhig, ehrlich, cineastisch-premium — nie Dispensary, nie Tech-Startup",
+  "voice": {
+    "tone": "warm, direkt, handwerklich-stolz, Du-Ansprache",
+    "vocabulary": ["Hofkollektiv", "Handarbeit", "Vom Feld in die Flasche", "ehrlich", "Bio-zertifiziert", "regional"],
+    "neverSay": ["Heilung/medizinische Versprechen", "High/Rausch", "Dispensary-Slang", "revolutionär/disruptiv"]
+  },
+  "tokens": {
+    "bg": "#0D1408",
+    "accent": "#E8A33D",
+    "text": "#F2EBDC",
+    "typeDisplay": "high-contrast editorial serif (Fraunces)",
+    "typeBody": "clean grotesque (Space Grotesk)",
+    "texture": "golden-hour amber grade, soft haze, subtle film grain",
+    "accentRule": "sun-gold ONLY for CTAs, prices, active states, meter fill; never cold/neon drift"
+  },
+  "identityAssets": {
+    "logo": "assets-in/logo (pending Gate 0)",
+    "photos": ["Apollonia Bitzan product stills (exist)", "farm/field/horse photos (Gate 0 pending)", "bottle hero still (Gate 0 pending)"],
+    "referenceSites": ["sonn-werk.at — content/data ONLY, never layout"]
+  },
+  "upsellNotes": "Phase 2: native Astro checkout; Kutschenfahrten booking; email/loyalty. Rejection criteria: cold/neon drift · clinical white · leaf clichés · dispensary look · identity break still↔clip · >1 camera move/clip · readable text/logos/faces in focus."
+}

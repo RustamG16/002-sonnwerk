@@ -1,0 +1,153 @@
+PROJECT CONTEXT — Scroll-Driven Website Generation Service
+Owner: Russ · Founder of Convenium (digital agency)
+Last updated: 2026-07-10 (lab/001 media complete, Astro stack decision)
+
+1. WHAT THIS PROJECT IS
+Three connected tracks:
+Track A — Russ's personal portfolio (in production, showpiece/proof-of-concept):
+An Awwwards-style, cinematic, scroll-driven portfolio starring Russ as the central 3D element. AI-generated video assets (Google Flow / Veo), rendered via the flipbook canvas-scrubber method. Currently vanilla Vite; will be ported to Astro AFTER the lab/001 template conventions stabilize (portfolio also joins the agency catalog as an example).
+Track B — Subscription service (the business):
+A platform where a user describes their business/website in one brief, the system classifies it into a site archetype, tells the user exactly which media assets to generate (Google Flow / Veo — chosen over token-heavy alternatives for cost), ingests the resulting MP4s, extracts frames, and generates a production-ready scroll-driven website. Sold as a subscription (SaaS). Any business type, not just portfolios.
+Track C — lab/ (client-archetype builds, sellable + template source):
+Numbered lab projects that productize one archetype each. lab/001-restaurant = SEEBLICK & GLUT (archetype 05), first sellable build and the base template for content-first client sites. Status 2026-07-10: Gate 1 + Gate 2 media complete and approved (still_hero + hero-sear/room/craft, all 1080p·16:9·24fps·8s), ingest pending (strip AAC audio, rename still-hero.jpeg → still_hero.jpg, posters, compression, mobile variants), site build handed to Cursor.
+Scroll-scrubbed heroes use the FLIPBOOK METHOD (see §4). Never video.currentTime scrubbing. Ambient-loop archetypes (see §4a) use native looping <video> instead — flipbook is for scroll-driven camera journeys, not for everything.
+
+2. SOURCE MATERIAL — "The One-Prompt Website Pack" (Zubair Trabzada, 2026)
+A 10-prompt pack, each prompt = a complete site brief (video shots + site structure + design direction + launch/verify instruction). Originally written for Higgsfield MCP + Seedance 2.0; we adapt to Google Flow / Veo + flipbook rendering.
+The 10 site archetypes in the pack:
+#ArchetypeExample brandHero animation typeKey mechanic01Luxury productAURUM & NOIR (watch)360° studio turntable orbitOrbit + macro fly-through + exploded assembly; scroll rotates product02Experience / journeyABYSSAL (deep-sea expedition)5 chained clips, continuous descentScroll = descend; fixed HUD depth meter; clips chained final-frame → start-frame03Personal portfolio[YOU]360° orbit around the personIdentity reference on every generation; stats counters; pillars; work cards04E-commerce / dropONYX SUPPLY (streetwear)Model walk-toward-cameraProduct spin clips autoplay on hover; countdown; cart drawer demo05Restaurant / localSEEBLICK & GLUT (was: EMBER & OAK)Slow-mo fire/food macro — ambient loopsMenu section, reservation CTA; sellable at $2–5k; built as lab/00106Real estateTHE MERIDIAN (penthouse)Chained continuous property tourScroll walks buyer through home; progress indicator naming rooms07Automotive / big productVANTA (hypercar)Chained terrain journeyScroll drives the car; speed HUD synced to scroll; configurator teaser08SaaS / appPULSE (AI analytics)Particles assemble into dashboardHero builds itself on scroll; dark→white body; pricing table; FAQ09Agency / studioNOIR&COInk bloom in waterKinetic word-slam manifesto; hover video reveals; custom cursor10Fitness / gymFORGEChalk-clap cloud in light shaftProgram grid; counters; pricing tiers; schedule + signup
+Universal patterns extracted from the pack:
+
+ONE hero/reference image first, passed as reference to every clip → consistency across shots. Consistency beats quality.
+Chaining: each clip's final frame = next clip's start frame → one seamless "unbroken" camera journey (archetypes 02, 06, 07).
+Defaults: ~8s per clip, 1080p, 16:9, no audio. 2–3 takes on the hero clip only; first acceptable take everywhere else.
+Every prompt ends with: launch on localhost + verify animations before declaring done.
+Compress for web (~90% size cut) as a standard post step.
+Deployment: GitHub repo → Cloudflare Pages → custom domain.
+Commercial angle: archetypes 05, 06, 10 are the sellable local-business deliverables ($2,000+ each).
+Two-gate workflow (proven in lab/001): Gate 1 = lock the identity still (iterate stills, they're cheap) with explicit owner approval before ANY video; Gate 2 = clips, every one referencing the approved still. Judge results against brand tokens, not literal prompt wording — a drift that matches tokens better is a keeper.
+
+
+3. ASSET GENERATION — GOOGLE FLOW / VEO (NOT Higgsfield/Seedance)
+Reason for switch: cost (Excel/token-heavy approaches rejected; Flow is cheaper), despite Flow having no MCP. Current workflow is hybrid: Claude writes the prompts → user generates manually in Flow → uploads MP4s → pipeline extracts frames. Veo API (Vertex AI / Gemini API) is the future automation path.
+Confirmed Veo 3.1 / Flow capabilities (verified July 2026):
+
+Ingredients to Video: up to 3–4 reference images to lock character/object/style identity (Veo 3.1: 8s only, Lite/Fast; Gemini Omni Flash: 4/6/8/10s + character/avatar & audio refs)
+Frames to Video: explicit start frame + end frame (Veo 3.1, 4/6/8s). Omni Flash multi-frame with transition instructions works live despite docs saying "coming soon"
+Extend: continue from the last second of a previous clip (8s clips only)
+720p/1080p (always use 1080p), 16:9 or 9:16, ~8s clips, native audio (always prompt "no dialogue, no music" and strip audio anyway — Flow downloads still carry an AAC track; strip with ffmpeg -i in.mp4 -an -c:v copy out.mp4)
+Duration is set in the prompt-box settings (UI), not by writing "8 seconds" in the prompt text
+Image models in Flow: Nano Banana 2 (default), Nano Banana Pro (Ultra), Imagen 4. In lab/001 comparisons all three produced usable stills; pick by composition fit, not model
+
+The established asset generation order (NON-NEGOTIABLE, per Russ):
+
+Lock character identity first — triptych (front, three-quarter, back) + portrait still ("Asset 0"). Iterate stills until likeness is confirmed BEFORE spending video credits.
+Generate empty scene plates second — clean environments with NO character in them.
+Composite character-into-scene as a STILL third.
+Animate last, using that composited still as the start frame (Frames-to-Video where needed).
+
+Scene-first, character-composited-second. Never generate character-in-scene directly.
+Hard-won prompt-engineering rules (do not relearn these):
+
+Triptych outperforms a single reference image for multi-angle consistency. Feed it as the first ingredient in every generation.
+360° orbits: never one clip. Two chained 180° clips via Frames-to-Video with explicit front + back anchor stills. Single image + motion text makes Veo hallucinate environment or rotate the subject instead of the camera.
+Camera instructions must be isolated, first, and use professional terminology. Lead with a named camera move in its own sentence (e.g., "Camera: 180-degree arc dolly-out shot"), then explicit exclusions ("the subject does not rotate, spin, or turn; only the camera moves"). Descriptive prose fails.
+No readable text in any shot (AI text = gibberish; real text is overlaid in HTML).
+Always append: "No dialogue, no music. No warping, no morphing, no extra limbs."
+End frame for the Builder arc dolly-out = wide lateral profile shot, camera exactly 90° to the subject (not over-the-shoulder, not behind).
+(lab/001) Same-scene multi-frame trick: when using multi-frame/frames-to-video for a single camera move, derive the end frame FROM the start frame via image edit (crop/push-in/"camera moved forward") — frames must differ by camera position only, never by content, or the model invents a hidden cut/second move.
+(lab/001) Style-hold clause, not style stack, in motion prompts: the start frame carries the look; re-describing the full aesthetic makes the model re-render instead of animate. Add one sentence: "Maintain the exact color grade, depth of field, and film grain of the provided frame — do not brighten or clean up."
+(lab/001) Reference images bleed content, not just grade: when referencing a still only for its look, state "use reference ONLY for color grade, lighting character, and grain — different scene: no <objects from reference>."
+(lab/001) Pick stills geometry-first: the composition must physically support the single permitted camera move (e.g., a dolly-forward needs a walkable aisle). A prettier still with blocked geometry forces the model into crane/warp moves.
+(lab/001) Don't prompt people/objects into video that aren't in the still (e.g., a bartender with no bar in frame) — the model invents objects mid-clip. Use what the still contains, constrain its motion instead.
+
+Character reference (Russ) — locked:
+
+Dark brown hair swept back, thick dark brows, short full beard + mustache, defined jaw, athletic build, botanical line-art tattoo on right forearm.
+Wardrobe locked: cream ribbed-knit polo tucked into black pleated trousers, brown leather loafers (matched to clothing reference image).
+Reference inputs: full-body triptych + portrait stills + front-facing photo. 3 reference photos rule: (1) front head-and-shoulders anchor, (2) three-quarter angle, (3) full-body in exact wardrobe — all same session, same lighting.
+
+Brand universe — Convenium:
+Warm obsidian base · gold dominant accent · cyan secondary · magenta sparingly. Cyberpunk-Athens leaning; individual scenes may deviate (Builder desk scene = emerald/green studio palette, Jarvis-style holographic interface, minimalist modern desk).
+Client brand — lab/001 SEEBLICK & GLUT (locked):
+Wood-fire restaurant, Wörthersee shore, Klagenfurt. "Feuer. See. Sonst nichts." Near-black backgrounds · warm cream · ONE accent: ember orange #E85D2F · amber/teal grade · subtle film grain · ember/candle/golden-hour-lake light. Rejection criteria: identity break between still and clips; >1 camera move or handheld feel; accent drifts cold; text/logos/faces in focus.
+Portfolio assets in scope (Track A):
+
+Hero 360° orbit (two chained 180° clips) — scroll centerpiece
+Builder desk scene (emerald studio, holographic interface)
+Closer corridor scene (walking toward camera, stops in hero pose)
+Poster stills: loading state, Open Graph preview, mobile portrait crop
+
+
+4. THE FLIPBOOK METHOD — TECHNICAL SPEC (for scroll-scrubbed heroes)
+Never scrub <video> via currentTime — CPU seek-choking, stutter, mobile crashes.
+Pipeline: MP4 → FFmpeg → .webp image sequence → single <canvas> scrubber.
+
+Extraction: ffmpeg -i clip.mp4 -vf "fps=24,scale=1920:-1" -c:v libwebp -q:v 75 assets/sequence_name/frame_%04d.webp
+Naming convention: /assets/sequence_name/frame_0001.webp
+Exactly ONE <canvas> element as the visual engine; if full-page: position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none;
+Frame budgets: hero sequence 20–24 fps (~320–380 frames for a chained orbit), secondary scenes 12–15 fps (~100 frames), webp q≈65–75
+Mobile: half-resolution frame set, selected by viewport width
+Preload hero sequence; lazy-load secondary sequences; poster still shown while loading
+Target payload: hero sequence ~8–15 MB after compression
+Black-void backgrounds compress far better in webp — favor them
+Lenis smooth scroll; text reveals pinned to scroll position
+QA: step the chained-clip seam frame-by-frame; trim warped first/last frames before extraction
+
+4a. AMBIENT-LOOP PATTERN (for loop archetypes, e.g., 05 restaurant)
+When the hero is an ambient mood loop (not a scroll-driven camera journey), use native <video>: muted, autoplay, loop, playsinline, preload="metadata", poster = extracted first frame. Poster is the LCP; video swaps in after paint. Lazy-load below-fold videos (IntersectionObserver). prefers-reduced-motion → posters only. Mobile variants via source switching. Aspect-ratio boxes → zero CLS. Choose flipbook vs loop per archetype, not by default.
+
+5. THE SERVICE (Track B) — CURRENT DESIGN STATE
+User flow: describe business → system classifies into one of the 10 archetypes → system outputs a personalized asset brief (Flow/Veo prompts + reference-image instructions) → user generates media themselves in Flow → uploads MP4s + content (copy, stats, links) → backend extracts frames (Node.js + FFmpeg) → template engine renders the archetype's site with the canvas scrubber → deploy.
+Architecture layers:
+LayerToolIntake + classification + prompt generationClaude (Fable 5 / Sonnet via API)Media generationUser-side Google Flow (later: Veo API via Vertex/Gemini)Frame extractionNode.js + FFmpegSite generationAstro template engine (decided 2026-07-10; was Next.js/React): zero-JS-by-default static output, build-time SEO/JSON-LD, per-client src/content/site.ts config + assets swap, React islands only where interactivity demands. One scrubber core (flipbook) + ambient-loop pattern + per-archetype scaffoldsStorage/hostingS3 or Cloudflare R2 + Vercel / Cloudflare Pages
+Stack rationale (locked): for content-first client sites, performance + SEO must be a property of the stack, not per-project effort. Astro delivers that; React runtime added weight and client-rendered SEO caveats with zero benefit for non-interactive sites.
+Monetization: subscription tiers (Starter / Pro / Agency white-label). The agency angle: archetypes 05/06/10 as $2k+ local-business deliverables.
+Rollout: MVP = prompt-brief generator + manual upload + extraction + one archetype template. lab/001 (restaurant/05) is now the first template, ahead of the portfolio archetype. Then add archetypes, then Veo API automation.
+Differentiation: the scroll-driven flipbook cinematic aesthetic + AI-video persona integration — not competing with generic AI site builders (Framer, Relume) on breadth.
+
+6. OPEN ITEMS / NEXT STEPS
+
+ lab/001: run ingest (strip audio, rename still, posters, compression, mobile variants) → Cursor builds Astro site → collect notes.md learnings into this context
+ lab/001: Impressum/Datenschutz content, reservation target (link vs widget), real menu copy from client
+ Port portfolio (vanilla Vite → Astro) after lab/001 template conventions stabilize
+ Finish Track A portfolio assets (Builder, Closer iterations; validate likeness before video credits)
+ Integrate completed frame sequences into the canvas scrubber implementation
+ Run the big architecture prompt (site-type decision tree + 5–7 full template specs + FFmpeg batch script + scrubber component skeleton) and bring the output back into this project
+ Decide intake questions (industry, one-liner, mood, accent color, 2–4 reference photos)
+ Build MVP pipeline: upload → FFmpeg → manifest JSON → template render
+
+
+7. HOW TO WORK WITH RUSS (for the assistant)
+
+Direct and technically specific; when he flags a repeated error, the correction must stick immediately.
+Prefers structured step-by-step prompts, explicit exclusion language in generation prompts, and detailed spec documents as starting points.
+Iterative discipline: lock foundational assets before dependent ones; validate stills before animating; control credit spend.
+Give feeling-based iteration notes the way a director would; translate intent into code.
+Context maintenance: this document is the single source of truth for project state. When a conversation produces new decisions, learnings, or status changes, end the session by producing an updated context (or a clearly marked delta block) for Russ to paste back into the project's Context tab — the assistant cannot edit the tab itself.
+
+New changes, please update the file with this:
+
+## Track C — lab/002-producer: SONNWERK (added 2026-07-12)
+New archetype for the catalog: "Producer / craft-commerce" (hybrid 02 journey + 04 e-commerce).
+Client: sonn-werk.at — Austrian BIO CBD Hofkollektiv. Full site rebuild INCLUDING shop.
+
+Decisions (locked):
+- Commerce: headless WooCommerce — existing Woo stays as backend (Store API, build-time
+  product fetch + webhook rebuilds; cart/checkout live client-side; checkout hands off
+  to Woo in phase 1)
+- Media: HYBRID — real stills (Bitzan product photos + client farm photos) as identity
+  anchors, AI camera motion via Flow/Veo image-to-video. New Gate 0 = collect real anchors
+  before Gate 1
+- Concept: „Vom Feld in die Flasche" — 4 chained flipbook clips (FELD→ERNTE→EXTRAKTION→
+  FLASCHE), fixed process-meter HUD (ABYSSAL mechanic); ambient loops + hover product
+  loops below; no scroll-jacking in shop layer
+- Brand tokens: green-black #0D1408 · cream #F2EBDC · sun-gold #E8A33D · golden-hour
+  amber grade + grain · serif display + grotesque UI. Reject: cold/neon drift, clinical
+  white, leaf clichés, "dispensary" look
+- Mobile journey = clips 1+4 only with crossfade (approved creative decision)
+- Payload: preload clips 1–2, lazy-load 3–4 during chapter-1 scroll
+- Risk: Woo Store API cart CORS/nonce — budget 1 day
+
+Status: design spec approved in session, written to
+2026-07-12-sonnwerk-lab002-design.md. Next: user spec review → implementation plan.

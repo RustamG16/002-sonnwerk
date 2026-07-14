@@ -1,0 +1,11 @@
+{
+  "name": "sonnwerk-gate0-scraper",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "scrape:gate0": "node scripts/scrape-gate0-assets.mjs"
+  },
+  "dependencies": {
+    "puppeteer-real-browser": "^1.4.4"
+  }
+}

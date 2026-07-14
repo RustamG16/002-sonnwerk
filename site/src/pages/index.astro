@@ -1,0 +1,215 @@
+---
+import Base from '../layouts/Base.astro';
+import AmbientMedia from '../components/AmbientMedia.astro';
+import { brand, journey, categories, principles, quote, ambient } from '../content/site';
+
+const framesJson = JSON.stringify({ ...journey.frames, eagerFraction: 0.5 });
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: 'SONNWERK Hofkollektiv',
+  url: brand.domain,
+  description: 'BIO-CBD vom eigenen Hofkollektiv in Österreich — vom Feld in die Flasche.',
+  address: { '@type': 'PostalAddress', addressCountry: 'AT' },
+};
+---
+<Base title="SONNWERK — Vom Feld in die Flasche. BIO-CBD vom Hofkollektiv" jsonLd={jsonLd}>
+  <!-- JOURNEY: 4 chained flipbook chapters, single fixed canvas, meter HUD.
+       JS-off / reduced-motion: poster + chapters render as static sections. -->
+  <section class="journey" data-journey data-frames={framesJson}>
+    <div class="stage">
+      <img class="poster" src="/media/journey/poster.webp" alt="Sonnenaufgang über dem Hanffeld" />
+      <canvas data-journey-canvas aria-hidden="true"></canvas>
+
+      <div class="hero-copy" data-chapter data-chapter-id="feld">
+        <p class="eyebrow">Bio-CBD Hofkollektiv · Österreich</p>
+        <h1>{brand.claim}</h1>
+        <p class="sub">{brand.sub}</p>
+        <a href="/shop/" class="btn btn--solid">Jetzt bestellen</a>
+      </div>
+
+      {journey.chapters.slice(1).map((c) => (
+        <div class="chapter-copy" data-chapter data-chapter-id={c.id}>
+          <p class="eyebrow">{c.label}</p>
+          <h2 class="serif">{c.title}</h2>
+          {c.copy.map((line) => <p class="dim">{line}</p>)}
+        </div>
+      ))}
+
+      <!-- Process meter HUD (ABYSSAL mechanic): fixed right edge, gold fill, chapter nav -->
+      <div class="meter" aria-hidden="true">
+        <div class="track"><div class="fill" data-meter-fill></div></div>
+        <div class="labels">
+          {journey.chapters.map((c) => <button type="button" data-meter-label>{c.label}</button>)}
+        </div>
+      </div>
+
+      <div class="scroll-hint dim">Scrollen</div>
+    </div>
+  </section>
+
+  <!-- WARUM SONNWERK: cream paper break -->
+  <section class="paper-section warum">
+    <div class="wrap">
+      <p class="eyebrow reveal">Warum Sonnwerk</p>
+      <h2 class="reveal">Ein Hof. Keine Umwege.</h2>
+      <div class="principles">
+        {principles.map((p) => (
+          <div class="principle reveal">
+            <h3 class="serif">{p.title}</h3>
+            <p class="dim">{p.copy}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORY GRID: 6 cards, photos on cream (Stitch fix 4) -->
+  <section class="cats">
+    <div class="wrap">
+      <p class="eyebrow reveal">Apotheke der Natur</p>
+      <h2 class="reveal">Was das Feld hergibt.</h2>
+      <div class="grid">
+        {categories.map((c) => (
+          <a href={`/shop/${c.slug}/`} class="cat reveal">
+            <span class="media"><img src={c.image} alt={c.name} loading="lazy" width="800" height="800" /></span>
+            <span class="label gold">{c.name}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- BEGLEITER BAND -->
+  <section class="dogband">
+    <AmbientMedia {...ambient.begleiter} class="bg" />
+    <div class="wrap inner">
+      <h2 class="serif reveal">Auch für Deine Begleiter.</h2>
+      <p class="dim reveal">Mild dosierte CBD-Produkte für Hunde — laborgeprüft, THC-frei. Entwickelt am Hof, wo Tiere zur Familie gehören.</p>
+      <a href="/shop/tierprodukte/" class="btn reveal">Tierprodukte entdecken</a>
+    </div>
+  </section>
+
+  <!-- GALERIE TEASER -->
+  <section class="galerie-teaser paper-section">
+    <div class="wrap inner">
+      <div class="thumbs" aria-hidden="true">
+        <img src="/media/galerie/pfluegen.webp" alt="" loading="lazy" />
+        <img src="/media/galerie/hofkatze.webp" alt="" loading="lazy" />
+        <img src="/media/galerie/extraktion.webp" alt="" loading="lazy" />
+      </div>
+      <div class="text">
+        <p class="eyebrow reveal">Galerie</p>
+        <h2 class="reveal">Der Hof in Bildern.</h2>
+        <p class="dim reveal">Feld, Pferde, Handarbeit — zieh Dich durch eine endlose Leinwand aus unserem Alltag.</p>
+        <a href="/galerie/" class="btn reveal" style="border-color:#0D1408;color:#0D1408">Galerie öffnen</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUOTE -->
+  <section class="quote">
+    <div class="wrap">
+      <blockquote class="serif reveal">„{quote.text}“</blockquote>
+      <p class="dim reveal">— {quote.author}</p>
+    </div>
+  </section>
+</Base>
+
+<script src="../scripts/journey.js"></script>
+
+<style define:vars={{ chapterCount: journey.chapters.length }}>
+  /* --- Journey --- */
+  .journey { position: relative; height: calc(var(--chapterCount) * 130vh); }
+  .stage { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+  .poster, canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  canvas { pointer-events: none; }
+
+  .hero-copy, .chapter-copy {
+    position: absolute; inset: 0; z-index: 2;
+    display: flex; flex-direction: column; justify-content: center; gap: 18px;
+    padding: 0 clamp(24px, 8vw, 120px); max-width: 900px;
+    text-shadow: 0 1px 3px rgba(13, 20, 8, 0.5), 0 2px 28px rgba(13, 20, 8, 0.55);
+  }
+  .hero-copy .btn, .chapter-copy .btn { text-shadow: none; }
+  .hero-copy .sub { font-size: 1.2rem; color: var(--cream-dim); }
+  .hero-copy .btn { align-self: flex-start; margin-top: 10px; }
+  .chapter-copy { opacity: 0; }
+  .chapter-copy p { max-width: 480px; }
+
+  /* JS running → hero copy also becomes scrub-driven */
+  .journey:not(.journey--static) .chapter-copy,
+  .journey:not(.journey--static) .hero-copy { will-change: opacity, transform; }
+
+  /* Static fallback (reduced motion / no JS): stack chapters as normal sections */
+  .journey--static { height: auto; }
+  .journey--static .stage { position: relative; height: auto; overflow: visible; }
+  .journey--static canvas, .journey--static .meter { display: none; }
+  .journey--static .poster { position: relative; height: 100vh; }
+  .journey--static .hero-copy { position: absolute; inset: 0; }
+  .journey--static .chapter-copy { position: relative; opacity: 1; min-height: 60vh; }
+
+  .meter {
+    position: fixed; right: clamp(12px, 2.5vw, 36px); top: 50%; transform: translateY(-50%);
+    z-index: 40; display: flex; gap: 14px; align-items: stretch; height: 42vh;
+    transition: opacity 0.4s ease;
+  }
+  .meter.meter--off { opacity: 0; pointer-events: none; }
+  .track { width: 2px; background: var(--line); position: relative; }
+  .fill { position: absolute; top: 0; left: 0; right: 0; height: 0%; background: var(--gold); box-shadow: 0 0 12px rgba(232, 163, 61, 0.7); }
+  .labels { display: flex; flex-direction: column; justify-content: space-between; }
+  .labels button {
+    background: none; border: none; color: var(--cream-dim);
+    font-family: var(--sans); font-size: 0.62rem; letter-spacing: 0.28em; text-transform: uppercase;
+    writing-mode: horizontal-tb; text-align: left; padding: 0; transition: color 0.3s;
+  }
+  .labels button.active { color: var(--gold); }
+  @media (max-width: 767px) { .meter { display: none; } }
+
+  .scroll-hint {
+    position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
+    font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase; z-index: 2;
+    animation: hint 2.4s ease-in-out infinite;
+  }
+  @keyframes hint { 50% { transform: translate(-50%, 8px); opacity: 0.4; } }
+  @media (prefers-reduced-motion: reduce) { .scroll-hint { animation: none; } }
+
+  /* --- Below hero: NO scroll-jacking --- */
+  .warum { padding: 130px 0; }
+  .warum h2 { margin: 14px 0 60px; }
+  .principles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; }
+  .principle h3 { margin-bottom: 12px; }
+
+  .cats { padding: 130px 0; }
+  .cats h2 { margin: 14px 0 60px; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .cat .media { display: block; background: var(--paper); aspect-ratio: 1; overflow: hidden; }
+  .cat img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+  .cat:hover img { transform: scale(1.05); }
+  .cat .label { display: block; padding: 14px 0; font-size: 0.8rem; letter-spacing: 0.24em; text-transform: uppercase; }
+
+  .dogband { position: relative; min-height: 70vh; display: flex; align-items: center; }
+  .dogband :global(.bg) { position: absolute; inset: 0; }
+  .dogband :global(.bg img), .dogband :global(.bg video) { height: 100%; aspect-ratio: auto; }
+  .dogband::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to right, rgba(13,20,8,0.85), rgba(13,20,8,0.2)); z-index: 1; }
+  .dogband .inner { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 18px; align-items: flex-start; padding-top: 90px; padding-bottom: 90px; }
+
+  .galerie-teaser { padding: 110px 0; }
+  .galerie-teaser .inner { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(32px, 5vw, 80px); align-items: center; }
+  .galerie-teaser .thumbs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .galerie-teaser .thumbs img:first-child { grid-row: span 2; height: 100%; object-fit: cover; }
+  .galerie-teaser .thumbs img { width: 100%; aspect-ratio: 4/3; object-fit: cover; }
+  .galerie-teaser h2 { margin: 12px 0 16px; }
+  .galerie-teaser .btn { margin-top: 24px; }
+  @media (max-width: 800px) { .galerie-teaser .inner { grid-template-columns: 1fr; } }
+
+  .quote { padding: 150px 0; text-align: center; }
+  blockquote { font-size: clamp(1.7rem, 3.6vw, 2.8rem); max-width: 900px; margin: 0 auto 24px; }
+
+  @media (max-width: 800px) {
+    .principles, .grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 540px) {
+    .principles { grid-template-columns: 1fr; }
+  }
+</style>

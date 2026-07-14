@@ -1,0 +1,46 @@
+---
+import { brand } from '../content/site';
+const year = new Date().getFullYear();
+---
+<footer>
+  <div class="wrap grid">
+    <div>
+      <img src="/logo-lang.png" alt="SONNWERK — Natur die wirkt" class="brandimg" width="280" loading="lazy" />
+      <p class="dim small">{brand.claim} BIO-CBD vom eigenen Hofkollektiv in Österreich.</p>
+    </div>
+    <nav aria-label="Shop">
+      <p class="eyebrow">Shop</p>
+      <a href="/shop/">Alle Produkte</a>
+      <a href="/shop/oel/">Öle</a>
+      <a href="/shop/tierprodukte/">Tierprodukte</a>
+    </nav>
+    <nav aria-label="Hof">
+      <p class="eyebrow">Hof</p>
+      <a href="/hof/">Unsere Story</a>
+      <a href="/hof/#kutschenfahrten">Kutschenfahrten</a>
+    </nav>
+    <nav aria-label="Rechtliches">
+      <p class="eyebrow">Rechtliches</p>
+      <a href="/impressum/">Impressum</a>
+      <a href="/datenschutz/">Datenschutz</a>
+      <a href="/agb/">AGB</a>
+    </nav>
+  </div>
+  <div class="wrap trust">
+    <p class="dim small">Austria Bio Garantie · AT-BIO-301 · Laborgeprüft · Versand AT &amp; DE</p>
+    <p class="dim small">© {year} SONNWERK Hofkollektiv. Kein Arzneimittel — keine medizinischen Aussagen.</p>
+  </div>
+</footer>
+
+<style>
+  footer { border-top: 1px solid var(--line); padding: 72px 0 40px; margin-top: 0; }
+  .grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; }
+  .brandimg { width: 280px; margin-bottom: 16px; }
+  .small { font-size: 0.85rem; }
+  nav { display: flex; flex-direction: column; gap: 10px; }
+  nav a { color: var(--cream-dim); font-size: 0.9rem; transition: color 0.2s; }
+  nav a:hover { color: var(--paper); }
+  .eyebrow { margin-bottom: 6px; }
+  .trust { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; border-top: 1px solid var(--line); margin-top: 56px; padding-top: 24px; }
+  @media (max-width: 800px) { .grid { grid-template-columns: 1fr 1fr; } }
+</style>

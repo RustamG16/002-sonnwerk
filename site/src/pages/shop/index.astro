@@ -1,0 +1,34 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import { products, categories } from '../../content/site';
+---
+<Base title="Shop — Apotheke der Natur | SONNWERK">
+  <main class="shop wrap">
+    <p class="eyebrow">Shop</p>
+    <h1>Apotheke der Natur</h1>
+    <nav class="pills" aria-label="Kategorien">
+      <a href="/shop/" class="pill active">Alle</a>
+      {categories.map((c) => <a href={`/shop/${c.slug}/`} class="pill">{c.name}</a>)}
+    </nav>
+    <div class="grid">
+      {products.map((p) => <ProductCard product={p} />)}
+    </div>
+  </main>
+</Base>
+
+<style is:global>
+  .shop { padding: 150px 0 120px; padding-left: clamp(20px, 4vw, 48px); padding-right: clamp(20px, 4vw, 48px); }
+  .shop h1 { margin: 10px 0 40px; }
+  .pills { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 56px; }
+  .pill {
+    padding: 0.5rem 1.3rem; border: 1px solid var(--line); border-radius: 999px;
+    font-size: 0.78rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--cream-dim);
+    transition: all 0.2s;
+  }
+  .pill:hover { border-color: var(--gold); color: var(--paper); }
+  .pill.active { background: var(--gold); border-color: var(--gold); color: var(--bg); }
+  .shop .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px 28px; }
+  @media (max-width: 900px) { .shop .grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 540px) { .shop .grid { grid-template-columns: 1fr; } }
+</style>

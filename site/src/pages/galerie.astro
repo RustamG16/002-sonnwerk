@@ -1,0 +1,140 @@
+---
+import Base from '../layouts/Base.astro';
+
+// Infinite drag canvas (Codrops InfiniteCanvas pattern, vanilla port).
+// Positions are fractions of a virtual tile that wraps in both axes.
+const items = [
+  { src: '/media/galerie/feld-morgen.webp', label: 'Das Feld am Morgen', x: 0.02, y: 0.04, w: 0.16 },
+  { src: '/media/galerie/pfluegen.webp',    label: 'Pflügen mit dem Pferd', x: 0.38, y: 0.00, w: 0.09 },
+  { src: '/media/galerie/haende.webp',      label: 'Getrocknete Blüten', x: 0.60, y: 0.06, w: 0.12 },
+  { src: '/media/galerie/flasche.webp',     label: 'Die Flasche', x: 0.87, y: 0.02, w: 0.08 },
+  { src: '/media/galerie/jungpflanze.webp', label: 'Junghanf', x: 0.10, y: 0.40, w: 0.10 },
+  { src: '/media/galerie/ernte.webp',       label: 'Ernte von Hand', x: 0.34, y: 0.33, w: 0.13 },
+  { src: '/media/galerie/grasen.webp',      label: 'Pause', x: 0.63, y: 0.42, w: 0.13 },
+  { src: '/media/galerie/sense.webp',       label: 'Mit der Sense', x: 0.92, y: 0.36, w: 0.08 },
+  { src: '/media/galerie/extraktion.webp',  label: 'Goldenes Öl', x: 0.01, y: 0.70, w: 0.12 },
+  { src: '/media/galerie/hofkatze.webp',    label: 'Die Hofkatze', x: 0.28, y: 0.74, w: 0.11 },
+  { src: '/media/galerie/gespann.webp',     label: 'Das Gespann', x: 0.52, y: 0.78, w: 0.12 },
+  { src: '/media/galerie/zaumzeug.webp',    label: 'Handwerk', x: 0.78, y: 0.72, w: 0.11 },
+  { src: '/media/galerie/bluete.webp',      label: 'Die Blüte', x: 0.15, y: 0.16, w: 0.08 },
+  { src: '/media/galerie/stall.webp',       label: 'Im Stall', x: 0.50, y: 0.55, w: 0.07 },
+  { src: '/media/galerie/feldarbeit.webp',  label: 'Feldarbeit', x: 0.75, y: 0.24, w: 0.10 },
+  { src: '/media/galerie/hof.webp',         label: 'Der Hof', x: 0.93, y: 0.55, w: 0.09 },
+];
+---
+<Base title="Galerie — Der Hof in Bildern | SONNWERK" description="Feld, Pferde, Handarbeit — das SONNWERK Hofkollektiv in Bildern.">
+  <main class="galerie">
+    <div class="canvas" data-canvas>
+      {items.map((it) => (
+        <figure class="item" data-item data-x={it.x} data-y={it.y} data-w={it.w}>
+          <img src={it.src} alt={it.label} draggable="false" loading="eager" />
+          <figcaption class="dim">{it.label}</figcaption>
+        </figure>
+      ))}
+    </div>
+    <div class="hud">
+      <p class="eyebrow">Der Hof in Bildern</p>
+      <p class="hint dim" data-hint>Ziehen, um zu entdecken</p>
+    </div>
+  </main>
+</Base>
+
+<script>
+  const canvas = document.querySelector('[data-canvas]') as HTMLElement;
+  const els = [...document.querySelectorAll('[data-item]')] as HTMLElement[];
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (!reduced) {
+    canvas.classList.add('canvas--free');
+    let TW = 0, TH = 0, vw = 0, vh = 0;
+    type It = { el: HTMLElement; x: number; y: number; w: number; h: number };
+    let its: It[] = [];
+
+    function measure() {
+      vw = innerWidth; vh = innerHeight;
+      TW = Math.max(vw * 1.5, 1900);
+      TH = Math.max(vh * 1.7, 1250);
+      its = els.map((el) => {
+        const fw = parseFloat(el.dataset.w!);
+        const w = fw * TW * (vw < 768 ? 1.7 : 1.25);
+        const img = el.querySelector('img')!;
+        const ar = (img.naturalHeight || 3) / (img.naturalWidth || 4);
+        el.style.width = `${w}px`;
+        return { el, x: parseFloat(el.dataset.x!) * TW, y: parseFloat(el.dataset.y!) * TH, w, h: w * ar + 40 };
+      });
+    }
+    measure();
+    addEventListener('resize', measure);
+
+    let ox = 0, oy = 0, tx = 0, ty = 0;      // rendered + target offsets
+    let dragging = false, px = 0, py = 0, moved = 0;
+
+    canvas.addEventListener('pointerdown', (e) => {
+      dragging = true; moved = 0; px = e.clientX; py = e.clientY;
+      canvas.setPointerCapture(e.pointerId);
+      canvas.classList.add('grabbing');
+    });
+    canvas.addEventListener('pointermove', (e) => {
+      if (!dragging) return;
+      tx += e.clientX - px; ty += e.clientY - py;
+      moved += Math.abs(e.clientX - px) + Math.abs(e.clientY - py);
+      px = e.clientX; py = e.clientY;
+    });
+    const up = () => { dragging = false; canvas.classList.remove('grabbing'); };
+    canvas.addEventListener('pointerup', up);
+    canvas.addEventListener('pointercancel', up);
+    canvas.addEventListener('click', (e) => { if (moved > 6) e.preventDefault(); }, true);
+    addEventListener('wheel', (e) => { tx -= e.deltaX; ty -= e.deltaY; e.preventDefault(); }, { passive: false });
+
+    const hint = document.querySelector('[data-hint]');
+    let hinted = false;
+
+    const mod = (a: number, m: number) => ((a % m) + m) % m;
+    function frame() {
+      ox += (tx - ox) * 0.085;
+      oy += (ty - oy) * 0.085;
+      if (!hinted && Math.abs(tx) + Math.abs(ty) > 60) { hinted = true; hint?.classList.add('gone'); }
+      for (const it of its) {
+        // wrap so each item re-enters from the opposite edge
+        const wx = mod(it.x + ox + it.w, TW) - it.w;
+        const wy = mod(it.y + oy + it.h, TH) - it.h;
+        it.el.style.transform = `translate3d(${wx}px, ${wy}px, 0)`;
+      }
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+</script>
+
+<style>
+  .galerie { height: 100vh; overflow: hidden; position: relative; }
+  .canvas { position: absolute; inset: 0; }
+  .canvas--free { cursor: grab; touch-action: none; }
+  .canvas--free.grabbing { cursor: grabbing; }
+
+  /* JS-off / reduced-motion fallback: calm static grid */
+  .canvas:not(.canvas--free) {
+    position: static; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+    padding: 120px clamp(20px, 4vw, 48px) 60px; height: 100vh; overflow-y: auto;
+  }
+  .canvas:not(.canvas--free) .item { position: static; width: auto !important; }
+
+  .canvas--free .item {
+    position: absolute; top: 0; left: 0; margin: 0; will-change: transform;
+    user-select: none; -webkit-user-drag: none;
+  }
+  .item img { width: 100%; height: auto; display: block; pointer-events: none; }
+  .item figcaption { font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; padding-top: 8px; }
+
+  .hud {
+    position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%);
+    text-align: center; z-index: 5; pointer-events: none;
+  }
+  .hint { font-size: 0.8rem; transition: opacity 0.6s; }
+  .hint.gone { opacity: 0; }
+</style>
+
+<style is:global>
+  /* full-viewport canvas page: no footer */
+  main.galerie ~ footer { display: none; }
+</style>
