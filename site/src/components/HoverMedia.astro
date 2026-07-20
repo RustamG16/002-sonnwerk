@@ -1,0 +1,37 @@
+---
+import { hoverLoops } from '../content/site';
+
+interface Props { poster: string; alt: string; loopKey?: string; class?: string }
+const { poster, alt, loopKey, class: cls = '' } = Astro.props;
+const src = loopKey ? hoverLoops[loopKey] ?? null : null;
+---
+<div class={`hover-media ${cls}`}>
+  <img src={poster} alt={alt} loading="lazy" width="800" height="800" />
+  {src && (
+    <video class="hover-video" muted loop playsinline preload="none" aria-hidden="true">
+      <source src={src} type="video/mp4" />
+    </video>
+  )}
+</div>
+
+<style>
+  .hover-media {
+    position: relative; overflow: hidden; background: var(--paper);
+    box-shadow: inset 0 0 0 1px rgba(13, 20, 8, 0.06);
+  }
+  .hover-media :global(img),
+  .hover-media :global(.hover-video) {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.55s var(--spring), opacity 0.4s ease;
+  }
+  .hover-media :global(.hover-video) {
+    position: absolute; inset: 0; opacity: 0; pointer-events: none;
+  }
+  :global(.card:hover) .hover-media :global(img),
+  :global(.cat:hover) .hover-media :global(img) { transform: scale(1.04); }
+  :global(.card:hover) .hover-media :global(.hover-video),
+  :global(.cat:hover) .hover-media :global(.hover-video) { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) {
+    .hover-media :global(.hover-video) { display: none; }
+  }
+</style>

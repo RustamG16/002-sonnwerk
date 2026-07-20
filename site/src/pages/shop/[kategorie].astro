@@ -32,9 +32,9 @@ const items = byCategory(category.slug);
   .pill {
     padding: 0.5rem 1.3rem; border: 1px solid var(--line); border-radius: 999px;
     font-size: 0.78rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--cream-dim);
-    transition: all 0.2s;
+    transition: border-color 0.35s var(--spring), color 0.35s var(--spring), background 0.35s var(--spring), transform 0.35s var(--spring);
   }
-  .pill:hover { border-color: var(--gold); color: var(--paper); }
+  .pill:hover { border-color: var(--gold); color: var(--paper); transform: translateY(-1px); }
   .pill.active { background: var(--gold); border-color: var(--gold); color: var(--bg); }
   .shop .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px 28px; }
   @media (max-width: 900px) { .shop .grid { grid-template-columns: 1fr 1fr; } }

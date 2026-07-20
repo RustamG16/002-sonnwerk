@@ -7,6 +7,9 @@
   --line: rgba(242, 235, 220, 0.16);
   --serif: 'Fraunces', Georgia, serif;
   --sans: 'Space Grotesk', system-ui, sans-serif;
+  --section-y: clamp(80px, 14vw, 160px);
+  --gap-lg: clamp(32px, 5vw, 80px);
+  --spring: cubic-bezier(0.2, 0.9, 0.2, 1);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -33,19 +36,29 @@ h3 { font-size: clamp(1.3rem, 2.2vw, 1.7rem); }
   font-size: 0.75rem; letter-spacing: 0.32em; text-transform: uppercase;
   color: var(--gold); font-weight: 500;
 }
+.section-num {
+  font-size: 0.62rem; letter-spacing: 0.28em; color: var(--gold);
+  margin-right: 0.75em;
+}
 .gold { color: var(--gold); }
 .dim { color: var(--cream-dim); }
+
+body.no-scroll { overflow: hidden; }
 
 /* Buttons: rectangular, thin gold border, cream text */
 .btn {
   display: inline-block; padding: 0.9rem 2.2rem;
   border: 1px solid var(--gold); background: transparent; color: var(--paper);
   font-family: var(--sans); font-size: 0.85rem; letter-spacing: 0.18em; text-transform: uppercase;
-  transition: background 0.25s, color 0.25s;
+  transition: background 0.35s var(--spring), color 0.35s var(--spring), transform 0.35s var(--spring), box-shadow 0.35s var(--spring);
 }
-.btn:hover { background: var(--gold); color: var(--bg); }
-.btn--solid { background: var(--gold); color: var(--bg); }
-.btn--solid:hover { background: transparent; color: var(--paper); }
+.btn:hover {
+  background: var(--gold); color: var(--bg);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(232, 163, 61, 0.25);
+}
+.btn--solid { background: var(--gold); color: var(--bg); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12); }
+.btn--solid:hover { background: transparent; color: var(--paper); box-shadow: none; }
 .btn--wide { display: block; width: 100%; text-align: center; }
 
 /* Cream "paper" sections */
@@ -62,4 +75,5 @@ h3 { font-size: clamp(1.3rem, 2.2vw, 1.7rem); }
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
   html { scroll-behavior: auto; }
+  .btn:hover { transform: none; box-shadow: none; }
 }

@@ -29,19 +29,30 @@ export const journey = {
   ],
 };
 
-export type Category = { slug: string; name: string; image: string };
+export type Category = { slug: string; name: string; image: string; hoverLoop?: string | null };
+
+/** Gate 2 hover-loop paths — wired to /media/hover/; clips play on hover when files exist */
+export const hoverLoops: Record<string, string | null> = {
+  oel: '/media/hover/oel.mp4',
+  kosmetik: '/media/hover/kosmetik.mp4',
+  gel: '/media/hover/gel.mp4',
+  balsam: '/media/hover/balsam.mp4',
+  tierprodukte: '/media/hover/tierprodukte.mp4',
+};
+
 export const categories: Category[] = [
-  { slug: 'oel',           name: 'Öl',           image: '/media/products/cat-oel.webp' },
-  { slug: 'kosmetik',      name: 'Kosmetik',     image: '/media/products/cat-kosmetik.webp' },
-  { slug: 'gel',           name: 'Gel',          image: '/media/products/cat-gel.webp' },
-  { slug: 'balsam',        name: 'Balsam',       image: '/media/products/cat-balsam.webp' },
-  { slug: 'tierprodukte',  name: 'Tierprodukte', image: '/media/products/cat-tierprodukte.webp' },
+  { slug: 'oel',           name: 'Öl',           image: '/media/products/cat-oel.webp',          hoverLoop: hoverLoops.oel },
+  { slug: 'kosmetik',      name: 'Kosmetik',     image: '/media/products/cat-kosmetik.webp',     hoverLoop: hoverLoops.kosmetik },
+  { slug: 'gel',           name: 'Gel',          image: '/media/products/cat-gel.webp',            hoverLoop: hoverLoops.gel },
+  { slug: 'balsam',        name: 'Balsam',       image: '/media/products/cat-balsam.webp',       hoverLoop: hoverLoops.balsam },
+  { slug: 'tierprodukte',  name: 'Tierprodukte', image: '/media/products/cat-tierprodukte.webp',   hoverLoop: hoverLoops.tierprodukte },
 ];
 
 export type Product = {
   slug: string; name: string; category: string; price: number; // EUR — placeholder until Woo fetch
   short: string; description: string; anwendung: string; labor: string;
   image: string; rating: number; reviews: number; placeholder: boolean;
+  hoverLoop?: string | null;
 };
 
 const P = (p: Omit<Product, 'placeholder'>): Product => ({ placeholder: true, ...p });
@@ -130,14 +141,21 @@ export const quote = {
   author: 'Kundin aus Kärnten',
 };
 
-// Ambient loops: real farm photography as posters; src stays null until ambient
-// clips are generated (Gate 2 hover/ambient loops still open — journey clips done).
+// Ambient loops: poster-first; src wired to Gate 2 paths (poster shows until mp4 lands in /media/ambient/)
+export const ambientPaths = {
+  begleiter: '/media/ambient/begleiter.mp4',
+  horses: '/media/ambient/horses.mp4',
+  harness: '/media/ambient/harness.mp4',
+  hanf: '/media/ambient/hanf.mp4',
+  feld: '/media/ambient/feld.mp4',
+} as const;
+
 export const ambient = {
-  begleiter: { src: null as string | null, poster: '/media/ambient/begleiter.webp', alt: 'Grasendes Pferd des Hofkollektivs' },
-  horses:    { src: null as string | null, poster: '/media/ambient/horses.webp',    alt: 'Arbeit mit dem Pferd am Feld' },
-  harness:   { src: null as string | null, poster: '/media/ambient/harness.webp',   alt: 'Kutschengeschirr des Hofkollektivs' },
-  hanf:      { src: null as string | null, poster: '/media/ambient/hanf.webp',      alt: 'Junge Hanfpflanze am Feld' },
-  feld:      { src: null as string | null, poster: '/media/ambient/feld.webp',      alt: 'Sonnenaufgang über dem Hanffeld' },
+  begleiter: { src: ambientPaths.begleiter, poster: '/media/ambient/begleiter.webp', alt: 'Grasendes Pferd des Hofkollektivs' },
+  horses:    { src: ambientPaths.horses,    poster: '/media/ambient/horses.webp',    alt: 'Arbeit mit dem Pferd am Feld' },
+  harness:   { src: ambientPaths.harness,   poster: '/media/ambient/harness.webp', alt: 'Kutschengeschirr des Hofkollektivs' },
+  hanf:      { src: ambientPaths.hanf,      poster: '/media/ambient/hanf.webp',    alt: 'Junge Hanfpflanze am Feld' },
+  feld:      { src: ambientPaths.feld,      poster: '/media/ambient/feld.webp',    alt: 'Sonnenaufgang über dem Hanffeld' },
 };
 
 export const checkout = {

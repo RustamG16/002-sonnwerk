@@ -36,7 +36,7 @@ const jsonLd = {
         <p class="eyebrow">{product.category}</p>
         <h1 class="serif">{product.name}</h1>
         <p class="rating"><span class="gold">{stars}</span> <span class="dim">{product.rating} · {product.reviews} Bewertungen</span></p>
-        <p class="price gold">{euro(product.price)}</p>
+        <p class="price gold serif">{euro(product.price)}</p>
         <p class="dim">{product.short}</p>
 
         <div class="buy">
@@ -58,7 +58,9 @@ const jsonLd = {
           ].map(([label, body], i) => (
             <details open={i === 0}>
               <summary>{label}</summary>
-              <p class="dim">{body}</p>
+              <div class="accordion-body">
+                <p class="dim">{body}</p>
+              </div>
             </details>
           ))}
         </div>
@@ -85,17 +87,22 @@ const jsonLd = {
 
 <style>
   .pdp { padding: 150px 0 120px; padding-left: clamp(20px, 4vw, 48px); padding-right: clamp(20px, 4vw, 48px); }
-  .cols { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(32px, 5vw, 80px); }
-  .main { background: var(--paper); aspect-ratio: 1; }
+  .cols { display: grid; grid-template-columns: 1.1fr 1fr; gap: var(--gap-lg); align-items: start; }
+  .main { background: var(--paper); aspect-ratio: 1; box-shadow: inset 0 0 0 1px rgba(242, 235, 220, 0.06); }
   .main img { width: 100%; height: 100%; object-fit: cover; }
   .thumbs { display: flex; gap: 12px; margin-top: 12px; }
-  .thumb { background: var(--paper); border: 1px solid transparent; width: 84px; aspect-ratio: 1; padding: 0; }
+  .thumb { background: var(--paper); border: 1px solid transparent; width: 84px; aspect-ratio: 1; padding: 0; transition: border-color 0.3s var(--spring); }
   .thumb:hover { border-color: var(--gold); }
   .thumb img { width: 100%; height: 100%; object-fit: cover; }
 
-  .info h1 { font-size: clamp(2rem, 4vw, 3rem); margin: 8px 0 10px; }
+  .info {
+    position: sticky;
+    top: calc(56px + 24px);
+    align-self: start;
+  }
+  .info h1 { font-size: clamp(2rem, 4vw, 3rem); margin: 8px 0 10px; letter-spacing: -0.02em; }
   .rating { margin-bottom: 14px; font-size: 0.9rem; }
-  .price { font-size: 1.7rem; font-family: var(--serif); margin-bottom: 16px; }
+  .price { font-size: clamp(2rem, 4vw, 2.75rem); margin-bottom: 16px; letter-spacing: -0.03em; line-height: 1; }
   .buy { display: flex; gap: 14px; margin: 28px 0 36px; }
   .stepper { display: flex; border: 1px solid var(--line); }
   .stepper button { width: 44px; background: none; border: none; color: var(--paper); font-size: 1.2rem; }
@@ -111,8 +118,14 @@ const jsonLd = {
     cursor: pointer; font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase;
     list-style: none; display: flex; justify-content: space-between;
   }
-  .accordion summary::after { content: '+'; color: var(--gold); }
+  .accordion summary::after { content: '+'; color: var(--gold); transition: transform 0.35s var(--spring); }
   .accordion details[open] summary::after { content: '−'; }
+  .accordion-body {
+    display: grid; grid-template-rows: 0fr;
+    transition: grid-template-rows 0.45s var(--spring);
+  }
+  .accordion details[open] .accordion-body { grid-template-rows: 1fr; }
+  .accordion-body > * { overflow: hidden; }
   .accordion p { padding-top: 12px; }
 
   .related { margin-top: 120px; }
@@ -120,6 +133,7 @@ const jsonLd = {
   .related .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
   @media (max-width: 900px) {
     .cols { grid-template-columns: 1fr; }
+    .info { position: static; }
     .related .grid { grid-template-columns: 1fr; }
   }
 </style>

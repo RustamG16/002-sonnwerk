@@ -4,30 +4,91 @@ const links = [
   { href: '/hof/', label: 'Der Hof' },
 ];
 ---
-<header class="site-header">
-  <div class="wrap bar">
-    <a href="/" class="logo serif"><img src="/logo-mark.png" alt="" width="34" height="34" />SONN<span class="gold">WERK</span></a>
-    <nav>
+<header class="site-header" data-site-header>
+  <div class="bar">
+    <a href="/" class="logo serif">
+      <img src="/logo-mark.png" alt="" width="34" height="34" />
+      SONN<span class="gold">WERK</span>
+    </a>
+
+    <nav class="nav-desktop" aria-label="Hauptnavigation">
       {links.map((l) => <a href={l.href}>{l.label}</a>)}
       <button type="button" class="cart-btn" data-cart-open aria-label="Warenkorb öffnen">
         Warenkorb <span class="cart-count" data-cart-count>0</span>
       </button>
     </nav>
+
+    <button
+      type="button"
+      class="nav-toggle"
+      data-nav-toggle
+      aria-expanded="false"
+      aria-controls="mobile-nav"
+      aria-label="Menü öffnen"
+    >
+      <span class="bar-top"></span>
+      <span class="bar-bot"></span>
+    </button>
   </div>
 </header>
+
+<nav id="mobile-nav" class="mobile-nav" data-mobile-nav aria-label="Mobile Navigation" aria-hidden="true">
+  <ul class="mobile-links">
+    {links.map((l, i) => (
+      <li style={`--i: ${i}`}>
+        <a href={l.href} data-mobile-link>{l.label}</a>
+      </li>
+    ))}
+    <li style={`--i: ${links.length}`}>
+      <button type="button" class="mobile-cart" data-mobile-cart data-cart-open>Warenkorb</button>
+    </li>
+  </ul>
+</nav>
 
 <style>
   .site-header {
     position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    padding-inline: clamp(20px, 4vw, 64px);
     background: linear-gradient(to bottom, rgba(13, 20, 8, 0.85), rgba(13, 20, 8, 0));
     backdrop-filter: blur(2px);
+    transition: background 0.4s var(--spring), backdrop-filter 0.4s var(--spring);
   }
-  .bar { display: flex; align-items: center; justify-content: space-between; height: 72px; }
-  .logo { font-size: 1.35rem; letter-spacing: 0.14em; display: flex; align-items: center; gap: 10px; }
-  .logo img { width: 34px; height: 34px; }
-  nav { display: flex; align-items: center; gap: clamp(16px, 3vw, 36px); }
-  nav a { font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cream-dim); transition: color 0.2s; }
-  nav a:hover { color: var(--paper); }
+  .site-header.scrolled {
+    background: rgba(13, 20, 8, 0.72);
+    backdrop-filter: blur(12px);
+  }
+
+  .bar {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 72px;
+    transition: height 0.4s var(--spring);
+  }
+  .site-header.scrolled .bar { height: 56px; }
+
+  .logo {
+    font-size: 1.35rem; letter-spacing: 0.14em;
+    display: flex; align-items: center; gap: 10px;
+    transition: transform 0.4s var(--spring);
+  }
+  .site-header.scrolled .logo { transform: scale(0.92); transform-origin: left center; }
+  .logo img { width: 34px; height: 34px; transition: width 0.4s var(--spring), height 0.4s var(--spring); }
+  .site-header.scrolled .logo img { width: 30px; height: 30px; }
+
+  .nav-desktop { display: flex; align-items: center; gap: clamp(16px, 3vw, 36px); }
+  .nav-desktop a {
+    position: relative;
+    font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--cream-dim); transition: color 0.25s;
+  }
+  .nav-desktop a::after {
+    content: ''; position: absolute; left: 0; bottom: -4px;
+    height: 1px; width: 0; background: var(--gold);
+    transform-origin: left;
+    transition: width 0.35s cubic-bezier(0.2, 0.9, 0.2, 1);
+  }
+  .nav-desktop a:hover { color: var(--paper); }
+  .nav-desktop a:hover::after { width: 100%; }
+
   .cart-btn {
     background: none; border: 1px solid var(--line); color: var(--paper);
     padding: 0.45rem 0.9rem; font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase;
@@ -37,5 +98,64 @@ const links = [
   .cart-count {
     background: var(--gold); color: var(--bg); min-width: 1.3em; text-align: center;
     font-size: 0.75rem; padding: 0.05em 0.3em;
+  }
+
+  .nav-toggle {
+    display: none;
+    position: relative; width: 44px; height: 44px;
+    background: none; border: none; padding: 0;
+  }
+  .nav-toggle span {
+    position: absolute; left: 10px; right: 10px; height: 1px;
+    background: var(--paper);
+    transition: transform 0.4s var(--spring), top 0.4s var(--spring), opacity 0.3s;
+  }
+  .bar-top { top: 17px; }
+  .bar-bot { top: 27px; }
+  .nav-toggle.is-open .bar-top { top: 22px; transform: rotate(45deg); }
+  .nav-toggle.is-open .bar-bot { top: 22px; transform: rotate(-45deg); }
+
+  .mobile-nav {
+    position: fixed; inset: 0; z-index: 60;
+    background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    visibility: hidden; opacity: 0;
+    transition: visibility 0.4s, opacity 0.4s var(--spring);
+    pointer-events: none;
+  }
+  .mobile-nav.is-open {
+    visibility: visible; opacity: 1; pointer-events: auto;
+  }
+  .mobile-links {
+    list-style: none; display: flex; flex-direction: column; gap: clamp(24px, 5vw, 40px);
+    text-align: center; padding: 0;
+  }
+  .mobile-links a,
+  .mobile-cart {
+    font-family: var(--serif); font-size: clamp(2rem, 8vw, 3.2rem);
+    letter-spacing: -0.02em; color: var(--paper);
+    background: none; border: none; cursor: pointer;
+    opacity: 0; transform: translateY(16px);
+    transition: opacity 0.45s var(--spring), transform 0.45s var(--spring), color 0.2s;
+    transition-delay: calc(var(--i) * 60ms);
+  }
+  .mobile-nav.is-open .mobile-links a,
+  .mobile-nav.is-open .mobile-cart {
+    opacity: 1; transform: none;
+  }
+  .mobile-links a:hover,
+  .mobile-cart:hover { color: var(--gold); }
+
+  @media (max-width: 720px) {
+    .nav-desktop { display: none; }
+    .nav-toggle { display: block; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-header, .bar, .logo, .logo img, .nav-desktop a::after,
+    .nav-toggle span, .mobile-nav, .mobile-links a, .mobile-cart {
+      transition: none;
+    }
+    .mobile-links a, .mobile-cart { opacity: 1; transform: none; }
   }
 </style>

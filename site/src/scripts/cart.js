@@ -22,8 +22,23 @@ function setQty(slug, qty) {
 const drawer = document.querySelector('[data-cart-drawer]');
 const overlay = document.querySelector('[data-cart-overlay]');
 
-function open() { drawer.hidden = false; overlay.hidden = false; }
-function close() { drawer.hidden = true; overlay.hidden = true; }
+function open() {
+  drawer?.classList.add('is-open');
+  overlay?.classList.add('is-open');
+  drawer?.setAttribute('aria-hidden', 'false');
+  overlay?.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('no-scroll');
+}
+
+function close() {
+  drawer?.classList.remove('is-open');
+  overlay?.classList.remove('is-open');
+  drawer?.setAttribute('aria-hidden', 'true');
+  overlay?.setAttribute('aria-hidden', 'true');
+  if (!document.querySelector('[data-mobile-nav]?.is-open')) {
+    document.body.classList.remove('no-scroll');
+  }
+}
 
 function render() {
   const items = read();
@@ -58,4 +73,10 @@ document.addEventListener('click', (e) => {
   else if (t.dataset.dec) setQty(t.dataset.dec, read().find((i) => i.slug === t.dataset.dec).qty - 1);
 });
 
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && drawer?.classList.contains('is-open')) close();
+});
+
 render();
+
+export { open, close };
