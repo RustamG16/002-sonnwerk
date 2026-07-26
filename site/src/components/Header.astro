@@ -1,7 +1,14 @@
 ---
 const links = [
   { href: '/shop/', label: 'Shop' },
-  { href: '/hof/', label: 'Der Hof' },
+  {
+    href: '/hof/', label: 'Der Hof',
+    children: [
+      { href: '/hof/', label: 'Der Hof' },
+      { href: '/arbeit-mit-dem-pferd/', label: 'Arbeit mit dem Pferd' },
+      { href: '/galerie/', label: 'Galerie' },
+    ],
+  },
 ];
 ---
 <header class="site-header" data-site-header>
@@ -12,7 +19,18 @@ const links = [
     </a>
 
     <nav class="nav-desktop" aria-label="Hauptnavigation">
-      {links.map((l) => <a href={l.href}>{l.label}</a>)}
+      {links.map((l) => (
+        l.children ? (
+          <div class="nav-item">
+            <a href={l.href} aria-haspopup="true">{l.label}</a>
+            <div class="dropdown">
+              {l.children.map((c) => <a href={c.href}>{c.label}</a>)}
+            </div>
+          </div>
+        ) : (
+          <a href={l.href}>{l.label}</a>
+        )
+      ))}
       <button type="button" class="cart-btn" data-cart-open aria-label="Warenkorb öffnen">
         Warenkorb <span class="cart-count" data-cart-count>0</span>
       </button>
@@ -37,6 +55,11 @@ const links = [
     {links.map((l, i) => (
       <li style={`--i: ${i}`}>
         <a href={l.href} data-mobile-link>{l.label}</a>
+        {l.children && (
+          <ul class="mobile-sublinks">
+            {l.children.map((c) => <li><a href={c.href} data-mobile-link>{c.label}</a></li>)}
+          </ul>
+        )}
       </li>
     ))}
     <li style={`--i: ${links.length}`}>
@@ -48,7 +71,6 @@ const links = [
 <style>
   .site-header {
     position: fixed; top: 0; left: 0; right: 0; z-index: 50;
-    padding-inline: clamp(20px, 4vw, 64px);
     background: linear-gradient(to bottom, rgba(13, 20, 8, 0.85), rgba(13, 20, 8, 0));
     backdrop-filter: blur(2px);
     transition: background 0.4s var(--spring), backdrop-filter 0.4s var(--spring);
@@ -58,9 +80,23 @@ const links = [
     backdrop-filter: blur(12px);
   }
 
+  /* Cream content scrolling under the header: invert instead of clipping/muddying the headline. */
+  .site-header.theme-paper {
+    background: rgba(242, 235, 220, 0.86);
+    backdrop-filter: blur(12px);
+  }
+  .site-header.theme-paper .logo,
+  .site-header.theme-paper .nav-desktop a,
+  .site-header.theme-paper .cart-btn { color: var(--bg); }
+  .site-header.theme-paper .nav-desktop a:hover { color: var(--bg); }
+  .site-header.theme-paper .cart-btn { border-color: rgba(13, 20, 8, 0.3); }
+  .site-header.theme-paper .cart-btn:hover { border-color: var(--gold); }
+  .site-header.theme-paper .nav-toggle span { background: var(--bg); }
+
   .bar {
     display: flex; align-items: center; justify-content: space-between;
     height: 72px;
+    padding-inline: var(--edge);
     transition: height 0.4s var(--spring);
   }
   .site-header.scrolled .bar { height: 56px; }
@@ -88,6 +124,49 @@ const links = [
   }
   .nav-desktop a:hover { color: var(--paper); }
   .nav-desktop a:hover::after { width: 100%; }
+
+  .nav-item { position: relative; }
+  .dropdown {
+    position: absolute; top: 100%; left: 50%; transform: translateX(-50%) translateY(-6px);
+    margin-top: 14px; padding: 10px 0; min-width: 200px;
+    background: rgba(13, 20, 8, 0.94); backdrop-filter: blur(12px);
+    border: 1px solid var(--line);
+    display: flex; flex-direction: column;
+    opacity: 0; visibility: hidden; pointer-events: none;
+    transition: opacity 0.25s var(--spring), transform 0.25s var(--spring), visibility 0.25s;
+  }
+  /* Invisible hover bridge over the 14px gap above the panel — without it, moving the
+     cursor from the trigger toward a submenu item crosses dead space and drops :hover,
+     closing the menu before the pointer ever reaches a link. Panel background/position
+     is untouched; this only extends the hoverable box upward. */
+  .dropdown::before {
+    content: ''; position: absolute; left: 0; right: 0; top: -14px; height: 14px;
+  }
+  .site-header.theme-paper .dropdown { background: rgba(242, 235, 220, 0.96); border-color: rgba(13, 20, 8, 0.14); }
+  .nav-item:hover .dropdown,
+  .nav-item:focus-within .dropdown,
+  .nav-item.is-open .dropdown {
+    opacity: 1; visibility: visible; pointer-events: auto; transform: translateX(-50%) translateY(0);
+  }
+  .dropdown a {
+    padding: 10px 20px; text-align: left; white-space: nowrap;
+    font-size: 0.75rem; letter-spacing: 0.14em;
+  }
+  .dropdown a::after { display: none; }
+  .dropdown a:hover { background: rgba(232, 163, 61, 0.1); }
+
+  .mobile-sublinks {
+    list-style: none; padding: 0; margin-top: 10px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  /* .mobile-links .mobile-sublinks a (not just .mobile-sublinks a) so this reliably beats
+     the .mobile-links a rule further down regardless of source order — same specificity
+     otherwise, and cascade order alone is too fragile here. */
+  .mobile-links .mobile-sublinks a {
+    font-family: var(--sans); font-size: 0.95rem; letter-spacing: 0.04em;
+    color: var(--cream-dim);
+  }
+  .mobile-links .mobile-sublinks a:hover { color: var(--gold); }
 
   .cart-btn {
     background: none; border: 1px solid var(--line); color: var(--paper);

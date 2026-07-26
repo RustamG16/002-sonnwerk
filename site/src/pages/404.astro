@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Seite nicht gefunden | SONNWERK">
+  <main class="notfound">
+    <p class="eyebrow">404</p>
+    <h1>Diese Seite ist vom Feld abgekommen.</h1>
+    <p class="dim">Die Seite, die Du suchst, gibt es nicht (mehr). Vielleicht hilft eine von diesen weiter.</p>
+    <div class="links">
+      <a href="/shop/" class="btn btn--solid">Zum Shop</a>
+      <a href="/hof/" class="btn">Der Hof</a>
+    </div>
+  </main>
+</Base>
+<style>
+  .notfound {
+    min-height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+    padding: 150px var(--edge) 120px; max-width: 640px;
+  }
+  .notfound h1 { margin: 14px 0 16px; }
+  .links { display: flex; gap: 16px; margin-top: 32px; flex-wrap: wrap; }
+</style>

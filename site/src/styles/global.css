@@ -3,6 +3,11 @@
   --bg: #0D1408;
   --paper: #F2EBDC;
   --gold: #E8A33D;
+  /* Gold (#E8A33D) mixed 60% toward --bg — plain gold-on-paper measures 1.82:1. On flat
+     paper this hits ~6.7:1; on Pferdevision's photo-backed scrim (where the mix is closer
+     to the real-world worst case) it measures 5.3:1 (qa/contrast-check.mjs). Same
+     derived-token pattern as --cream-dim below. */
+  --gold-dim: #654D1D;
   --cream-dim: rgba(242, 235, 220, 0.64);
   --line: rgba(242, 235, 220, 0.16);
   --serif: 'Fraunces', Georgia, serif;
@@ -10,10 +15,12 @@
   --section-y: clamp(80px, 14vw, 160px);
   --gap-lg: clamp(32px, 5vw, 80px);
   --spring: cubic-bezier(0.2, 0.9, 0.2, 1);
+  --edge: clamp(20px, 4vw, 64px);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; scroll-padding-top: 96px; }
+html.js { scroll-behavior: auto; } /* Lenis drives smoothing once JS is up — avoids fighting the native smooth-scroll */
 body {
   background: var(--bg);
   color: var(--paper);
@@ -22,7 +29,7 @@ body {
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
 }
-img, video, canvas { display: block; max-width: 100%; }
+img, video, canvas { display: block; max-width: 100%; height: auto; }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; cursor: pointer; }
 
@@ -30,8 +37,12 @@ h1, h2, h3, .serif { font-family: var(--serif); font-weight: 500; line-height: 1
 h1 { font-size: clamp(2.6rem, 7vw, 5.5rem); }
 h2 { font-size: clamp(2rem, 4.5vw, 3.4rem); }
 h3 { font-size: clamp(1.3rem, 2.2vw, 1.7rem); }
+/* Fraunces is loaded as a variable font but the browser's default optical sizing is
+   text-tuned even at 5rem+ — force the display-cut for real headlines instead. Smaller
+   serif uses (.serif utility on quotes/logo/product names) keep their natural opsz. */
+h1, h2 { font-variation-settings: 'opsz' 144; }
 
-.wrap { max-width: 1240px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 48px); }
+.wrap { padding: 0 var(--edge); }
 .eyebrow {
   font-size: 0.75rem; letter-spacing: 0.32em; text-transform: uppercase;
   color: var(--gold); font-weight: 500;
@@ -44,6 +55,16 @@ h3 { font-size: clamp(1.3rem, 2.2vw, 1.7rem); }
 .dim { color: var(--cream-dim); }
 
 body.no-scroll { overflow: hidden; }
+
+.skip-link {
+  position: absolute; top: -100%; left: var(--edge); z-index: 200;
+  background: var(--gold); color: var(--bg);
+  padding: 0.8rem 1.4rem; font-size: 0.85rem; letter-spacing: 0.08em;
+  transition: top 0.2s var(--spring);
+}
+.skip-link:focus { top: 16px; }
+
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 
 /* Buttons: rectangular, thin gold border, cream text */
 .btn {
@@ -60,17 +81,23 @@ body.no-scroll { overflow: hidden; }
 .btn--solid { background: var(--gold); color: var(--bg); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12); }
 .btn--solid:hover { background: transparent; color: var(--paper); box-shadow: none; }
 .btn--wide { display: block; width: 100%; text-align: center; }
+.btn--ink { border-color: var(--bg); color: var(--bg); }
+.btn--ink:hover { background: var(--bg); color: var(--paper); box-shadow: 0 8px 24px rgba(13, 20, 8, 0.18); }
 
 /* Cream "paper" sections */
 .paper-section { background: var(--paper); color: var(--bg); }
 .paper-section .dim { color: rgba(13, 20, 8, 0.62); }
+.paper-section .eyebrow,
+.paper-section .section-num { color: var(--gold-dim); }
+.paper-section + .paper-section { padding-top: 0; } /* belt-and-braces: stops the double-padding dead-void bug from recurring */
 
 .grain::after {
-  content: ''; position: fixed; inset: 0; z-index: 90; pointer-events: none; opacity: 0.05;
+  content: ''; position: fixed; inset: 0; z-index: 45; pointer-events: none; opacity: 0.05;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-.reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.reveal { transition: opacity 0.8s ease, transform 0.8s ease; }
+html.js .reveal { opacity: 0; transform: translateY(28px); }
 .reveal.in { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }

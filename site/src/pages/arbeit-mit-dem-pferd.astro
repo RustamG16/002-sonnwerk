@@ -1,0 +1,288 @@
+---
+import Base from '../layouts/Base.astro';
+import { brand } from '../content/site';
+
+const img = (slug: string) => ({
+  src: `/media/pferd/${slug}-1000.webp`,
+  srcset: `/media/pferd/${slug}-640.webp 640w, /media/pferd/${slug}-1000.webp 1000w, /media/pferd/${slug}-1600.webp 1600w`,
+});
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: 'Warum echte Pferdestärken?',
+  description: 'Arbeit mit dem Pferd beim Hofkollektiv SONNWERK — Bodenschonung, Kultur, Tempo, Energie, Kreislauf und Handwerk.',
+  image: `${brand.domain}/media/pferd/hero-1600.webp`,
+  publisher: { '@type': 'Organization', name: 'SONNWERK Hofkollektiv' },
+};
+---
+<Base
+  title="Arbeit Mit Dem Pferd | SONNWERK - Natur Die Wirkt"
+  description="Warum echte Pferdestärken? Die Arbeit mit dem Pferd beim Hofkollektiv SONNWERK — Bodenschonung statt Traktor, Kultur, Tempo, Energie, Kreislauf und Handwerk."
+  jsonLd={jsonLd}
+  ogImage="/media/pferd/hero-1600.webp"
+>
+  <main class="pferd">
+    <header class="p-hero">
+      <img
+        class="p-hero-img"
+        src={img('hero').src}
+        srcset={img('hero').srcset}
+        sizes="100vw"
+        width="1600" height="1066"
+        alt="Ein Mann steht Kopf an Kopf mit einem Pferd des Hofkollektivs SONNWERK"
+      />
+      <div class="p-hero-scrim" aria-hidden="true"></div>
+      <div class="p-hero-copy wrap">
+        <p class="eyebrow reveal">Arbeit mit dem Pferd</p>
+        <h1 class="reveal">Warum echte Pferdestärken?</h1>
+      </div>
+    </header>
+
+    <div class="p-body">
+      <nav class="p-rail" aria-label="Kapitel">
+        <a href="#boden" data-tag>Boden</a>
+        <a href="#kultur" data-tag>Kultur</a>
+        <a href="#tempo" data-tag>Tempo</a>
+        <a href="#energie" data-tag>Energie</a>
+        <a href="#kreislauf" data-tag>Kreislauf</a>
+        <a href="#handwerk" data-tag>Handwerk</a>
+      </nav>
+
+      <div class="p-chapters">
+        <section id="boden" class="chapter chapter--boden" data-chapter="boden">
+          <img class="chapter-media reveal-mask" src={img('boden').src} srcset={img('boden').srcset} sizes="(max-width: 800px) 100vw, 55vw" width="1600" height="1066" loading="lazy" alt="Pflugschar im offenen Ackerboden auf dem SONNWERK-Hof" />
+          <div class="chapter-text">
+            <p class="eyebrow reveal">Boden</p>
+            <h2 class="reveal">Unser Boden wird es uns danken!</h2>
+            <blockquote class="serif reveal">„Jeder Mensch lebt von einem Stückchen Erde"</blockquote>
+            <p class="dim reveal">Daher sollte es für uns alle an oberster Stelle stehen, unsere Mutter Erde vital und lebendig zu halten. Bodenverdichtung, ein gestörter Wasserhaushalt und ein Mangel an Bodenleben sind unter Anderem große Probleme unserer modernen, maschinellen Arbeitsweise. Beim Hofkollektiv SONNWERK setzen wir deshalb auf's richtige Pferd.</p>
+          </div>
+        </section>
+
+        <section id="kultur" class="chapter chapter--kultur paper-section" data-chapter="kultur">
+          <div class="chapter-text">
+            <p class="eyebrow reveal">Kultur</p>
+            <h2 class="reveal">Erhalt von Kulturgut</h2>
+            <p class="dim reveal">Es gibt Wissen, dass man nicht durch Worte oder Videos vermitteln kann. Jenes wird lediglich in der Praxis von einer Generation an die nächste weitergegeben und wird dadurch zu einem Teil unserer Lebensart und Kultur. Zu dieser Art von Wissen zählen viele unserer bäuerlichen Tätigkeiten, so auch das richtige Arbeiten mit Pferden. Wir bei SONNWERK wollen einen wichtigen Beitrag dazu leisten, dass uns dieses Wissen nicht unwiederbringlich verloren geht.</p>
+          </div>
+          <figure class="chapter-print reveal-mask">
+            <img src={img('kultur').src} srcset={img('kultur').srcset} sizes="420px" width="1600" height="1066" loading="lazy" alt="Nahaufnahme einer Geschirrschnalle aus Leder" />
+            <figcaption class="dim">Geschirr, von Hand nachgezogen.</figcaption>
+          </figure>
+        </section>
+
+        <section id="tempo" class="chapter chapter--tempo paper-section" data-chapter="tempo">
+          <img class="chapter-media reveal-mask" src={img('tempo').src} srcset={img('tempo').srcset} sizes="100vw" width="1600" height="1066" loading="lazy" alt="Ein Mann geht hinter dem Pferdegespann auf einem Feldweg" />
+          <div class="chapter-text">
+            <p class="eyebrow reveal">Tempo</p>
+            <h2 class="reveal">Menschgerechtes Arbeitstempo</h2>
+            <blockquote class="serif reveal">„Die Ruhe sei dem Menschen heilig, nur die Dummen haben's eilig"</blockquote>
+            <p class="dim reveal">Die Verbindung, welche ein wahrer Bauer mit seinen Tieren eingeht, ist für Außenstehende kaum zu begreifen. Es ist die tagtägliche Fürsorge und Beschäftigung mit ihnen, die dafür sorgt, dass sich die Rhythmen von Mensch und Tier aufeinander abstimmen. Wenn man mit Pferden im bäuerlichen Sinne arbeitet, macht man auch die Pausen mit seinen Arbeitspartnern gemeinsam. Und auch die Rösser schauen am Ende des Tages voll Stolz auf ihr Tagwerk!</p>
+          </div>
+        </section>
+
+        <section id="energie" class="chapter chapter--energie" data-chapter="energie">
+          <img class="chapter-media reveal-mask" src={img('energie').src} srcset={img('energie').srcset} sizes="100vw" width="1600" height="1066" loading="lazy" alt="Grasendes Pferd des Hofkollektivs in der Abendsonne" />
+          <div class="chapter-scrim" aria-hidden="true"></div>
+          <div class="chapter-text">
+            <p class="eyebrow reveal">Energie</p>
+            <h2 class="reveal">Nachhaltige Solarenergie</h2>
+            <p class="dim reveal">Die Energie, welche uns die Sonne Tag für Tag schenkt, stellt die Basis unserer irdischen Existenz dar. Unsere Natur hat mittels Chlorophyll haltiger Geschöpfe den idealen Weg gefunden, diese Energie zu verwerten und in weiterer Folge allen weiteren Lebensformen zur Verfügung zu stellen. Daher ist das Pferd, als Teil der Natur, im perfekten Maße in der Lage, Grünland in Arbeitskraft umzuwandeln und das völlig dezentral und autark!</p>
+          </div>
+        </section>
+
+        <section id="kreislauf" class="chapter chapter--kreislauf" data-chapter="kreislauf">
+          <div class="chapter-text">
+            <p class="eyebrow reveal">Kreislauf</p>
+            <h2 class="reveal">Biodünger statt Treibhausgase</h2>
+            <p class="dim reveal">Es sind die immer wiederkehrenden Kreisläufe in der Natur, die für den Fortbestand des Lebens sorgen. Dabei bedingt das eine meist das andere, wobei jene nicht getrennt voneinander existieren können. Ein gutes Beispiel dafür ist das Verhältnis von Weidetier zu Grasland. Alles was sich nicht innerhalb dieser Logik bewegt, wie etwa unsere erdölabhängige Wirtschaftsweise, ist auf kurz oder lang zum Scheitern verurteilt. Die Folgen davon können wir alle bereits im Hier und Jetzt spüren.</p>
+          </div>
+          <img class="chapter-media chapter-media--small reveal-mask" src={img('kreislauf').src} srcset={img('kreislauf').srcset} sizes="(max-width: 800px) 100vw, 32vw" width="1600" height="1066" loading="lazy" alt="Hufabdruck und Dung auf sandigem Boden" />
+        </section>
+
+        <div class="waldkante">
+          <img class="reveal-mask" src={img('waldkante').src} srcset={img('waldkante').srcset} sizes="100vw" width="1600" height="168" loading="lazy" alt="" />
+          <h2 class="serif reveal">Das Pferdvolle an SONNWERK</h2>
+        </div>
+
+        <section id="handwerk" class="chapter chapter--handwerk" data-chapter="handwerk">
+          <img class="chapter-media reveal-mask" src={img('handwerk').src} srcset={img('handwerk').srcset} sizes="100vw" width="1600" height="1066" loading="lazy" alt="Mann im Hut in der Scheune des Hofkollektivs, im Gegenlicht" />
+          <div class="chapter-text">
+            <p class="eyebrow reveal">Handwerk</p>
+            <blockquote class="serif reveal p-largest">„Erst die Leidenschaft macht einen Beruf zur Berufung"</blockquote>
+            <h2 class="reveal">Präzision und Leidenschaft</h2>
+            <p class="dim reveal">Und es gehört schon eine ganze Menge Leidenschaft und Wille zum Lernen dazu, um sich dem Thema Arbeitspferd voll und ganz hinzugeben, wenn die maschinellen Möglichkeiten einen dermaßen zu Komfort und Bequemlichkeit verleiten. Es ist einfach eine überwältigende Zufriedenheit, die man verspürt, wenn man gemeinsam mit seinen Rössern eine Arbeit verrichtet. Man riecht den Boden, spürt das Wetter und ist stets im engen Kontakt mit seinen riesenhaften Arbeitspartnern, die einen immer wieder mit ihrer Kraft, Geschicklichkeit und Intelligenz überraschen.</p>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <section class="p-vision paper-section">
+      <img class="p-vision-img" src={img('pferdevision').src} srcset={img('pferdevision').srcset} sizes="100vw" width="1600" height="792" loading="lazy" alt="Das Pferdegespann zieht bei Sonnenuntergang eine Landstraße entlang" />
+      <div class="p-vision-scrim" aria-hidden="true"></div>
+      <div class="p-vision-text wrap">
+        <p class="eyebrow reveal">Pferdevision</p>
+        <p class="serif reveal p-manifesto">Ein visionärer Blick aus unserer Vergangenheit in die Zukunft: Das Hofkollektiv SONNWERK soll sich als ideale Symbiose von Fortschritt und Tradition verstehen. Es ist bei weitem nicht alles Moderne schlecht und nicht alles Traditionelle automatisch gut. Deshalb gilt es wie immer, die goldene Mitte zu finden, und dabei seine Souveränität und Freude am Tun nicht zu verlieren. Die Pferdekraft kann und muss moderne Maschinen nicht überall ersetzen, jedoch dort wo es sinnvoll, nachhaltig und effektiv ist, sollen die Rösser den Vorzug bekommen.</p>
+      </div>
+    </section>
+
+    <section class="p-cta">
+      <img class="p-cta-img" src={img('cta').src} srcset={img('cta').srcset} sizes="100vw" width="1600" height="1066" loading="lazy" alt="" aria-hidden="true" />
+      <div class="p-cta-scrim" aria-hidden="true"></div>
+      <div class="wrap p-cta-inner">
+        <p class="eyebrow reveal">Mitfahren</p>
+        <h2 class="reveal">Sieh Dir das aus der Nähe an.</h2>
+        <div class="p-cta-links reveal">
+          <a href="/hof/#kutschenfahrten" class="btn btn--solid">Kutschenfahrten anfragen</a>
+          <a href="/shop/" class="btn">Zum Shop</a>
+        </div>
+      </div>
+    </section>
+  </main>
+</Base>
+
+<script src="../scripts/pferd.js"></script>
+
+<style>
+  .pferd { position: relative; }
+  .pferd :global(.paper-section) .dim { color: rgba(13, 20, 8, 0.62); }
+
+  /* Masked reveals (P3): chapter photography unveils via a clip-path wipe instead of the
+     site's uniform fade-up — the single biggest "art-directed, not template" signal on the
+     page. Text keeps the normal .reveal line-rise. JS-off: images are simply visible. */
+  :global(html.js) .reveal-mask { clip-path: inset(0 0 100% 0); }
+  .reveal-mask.in { clip-path: inset(0 0 0% 0); }
+  @media (prefers-reduced-motion: reduce) {
+    :global(html.js) .reveal-mask { clip-path: none; }
+  }
+
+
+  /* --- Hero --- */
+  .p-hero { position: relative; height: 80vh; min-height: 480px; overflow: hidden; }
+  .p-hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .p-hero-scrim {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(13, 20, 8, 0.88) 0%, rgba(13, 20, 8, 0.15) 55%, rgba(13, 20, 8, 0.35) 100%);
+  }
+  .p-hero-copy { position: absolute; left: 0; right: 0; bottom: 64px; z-index: 2; }
+  .p-hero-copy h1 { max-width: 900px; text-shadow: 0 2px 24px rgba(13, 20, 8, 0.5); }
+  .p-hero-copy .eyebrow { text-shadow: 0 1px 8px rgba(13, 20, 8, 0.6); }
+
+  /* --- Layout: sticky tag rail + chapters --- */
+  .p-body { position: relative; background: var(--bg); }
+  .p-rail {
+    position: sticky; top: 96px; align-self: start;
+    display: flex; flex-direction: column; gap: 22px;
+    float: left; width: 140px; margin-left: var(--edge); padding-top: 8px;
+  }
+  .p-rail a {
+    font-size: 0.68rem; letter-spacing: 0.26em; text-transform: uppercase; color: var(--cream-dim);
+    transition: color 0.3s;
+  }
+  .p-rail a.active { color: var(--gold); }
+  .p-chapters { margin-left: calc(140px + var(--edge) + var(--gap-lg)); padding-right: var(--edge); }
+  @media (max-width: 1000px) {
+    .p-rail { display: none; }
+    .p-chapters { margin-left: 0; padding: 0 var(--edge); }
+  }
+
+  /* --- Chapter base --- */
+  .chapter { position: relative; padding: clamp(64px, 10vw, 120px) 0; }
+  .chapter-text { max-width: 640px; }
+  .chapter-text h2 { margin: 10px 0 20px; }
+  .chapter-text blockquote { font-size: clamp(1.3rem, 2vw, 1.7rem); line-height: 1.4; margin-bottom: 20px; max-width: 22ch; }
+  .chapter--boden .chapter-text blockquote { color: var(--gold); }
+  /* Kultur is a cream .paper-section — plain --gold measures 1.82:1 there (fails AA even
+     as large text); --gold-dim (same mix used for .paper-section .eyebrow) hits 6.72:1. */
+  .chapter--kultur .chapter-text blockquote { color: var(--gold-dim); }
+
+  /* BODEN: dark · image bleeds off the left viewport edge */
+  .chapter--boden { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: var(--gap-lg); padding-left: 0; }
+  .chapter--boden .chapter-media { margin-left: calc(-1 * var(--edge)); width: calc(100% + var(--edge)); aspect-ratio: 4/5; object-fit: cover; }
+  .chapter--boden .chapter-text { padding-right: var(--edge); }
+
+  /* KULTUR: cream · text-forward, small pinned print with a caption rule */
+  .chapter--kultur { display: grid; grid-template-columns: 1.3fr 1fr; gap: var(--gap-lg); align-items: start; padding: clamp(64px, 10vw, 120px) var(--edge); margin: 0 calc(-1 * var(--edge)); }
+  .chapter-print { max-width: 340px; justify-self: end; }
+  .chapter-print img { width: 100%; aspect-ratio: 3/2; object-fit: cover; }
+  .chapter-print figcaption { font-size: 0.8rem; padding-top: 10px; margin-top: 10px; border-top: 1px solid rgba(13, 20, 8, 0.16); }
+
+  /* TEMPO: cream · widest, quietest frame + only the proverb and one paragraph */
+  .chapter--tempo { padding: clamp(64px, 10vw, 120px) var(--edge); margin: 0 calc(-1 * var(--edge)); }
+  .chapter--tempo .chapter-media { width: 100%; aspect-ratio: 21/9; object-fit: cover; margin-bottom: clamp(32px, 5vw, 56px); }
+  .chapter--tempo .chapter-text { max-width: 60ch; }
+
+  /* ENERGIE: dark · text set over the frame, gold vignette */
+  .chapter--energie { position: relative; padding: 0; min-height: 78vh; display: flex; align-items: flex-end; }
+  .chapter--energie .chapter-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .chapter--energie .chapter-scrim {
+    position: absolute; inset: 0;
+    /* Stops measured against actual rendered text-block position (qa/contrast-energie.mjs)
+       so the eyebrow/heading/body all clear WCAG AA against the photo behind them, not by eye. */
+    background: linear-gradient(to top, rgba(13,20,8,0.95) 0%, rgba(13,20,8,0.9) 55%, rgba(13,20,8,0.3) 80%, rgba(13,20,8,0.05) 100%),
+      linear-gradient(135deg, rgba(232,163,61,0.14), transparent 55%);
+  }
+  .chapter--energie .chapter-text { position: relative; z-index: 2; padding: 0 var(--edge) 72px; }
+
+  /* KREISLAUF: dark · driest chapter — small, unglamorous image, text does the work */
+  .chapter--kreislauf { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: var(--gap-lg); }
+  .chapter-media--small { width: 280px; aspect-ratio: 4/3; object-fit: cover; }
+  @media (max-width: 800px) { .chapter--kreislauf { grid-template-columns: 1fr; } .chapter-media--small { width: 100%; } }
+
+  /* Waldkante divider — the client's own idiom, used once */
+  .waldkante { position: relative; margin: 0 calc(-1 * var(--edge)); }
+  .waldkante img { width: 100%; display: block; aspect-ratio: 1600/168; object-fit: cover; }
+  .waldkante h2 { text-align: center; padding: clamp(48px, 8vw, 88px) var(--edge) clamp(24px, 4vw, 40px); }
+
+  /* HANDWERK: dark · high contrast, largest type on the page */
+  .chapter--handwerk { display: grid; grid-template-columns: 1.1fr 1fr; gap: var(--gap-lg); align-items: center; }
+  .chapter--handwerk .chapter-media { aspect-ratio: 3/4; object-fit: cover; filter: contrast(1.08); }
+  .p-largest { font-size: clamp(1.8rem, 3.2vw, 2.6rem); color: var(--gold); max-width: 16ch; }
+  @media (max-width: 800px) { .chapter--handwerk { grid-template-columns: 1fr; } }
+
+  @media (max-width: 800px) {
+    .chapter--boden { grid-template-columns: 1fr; padding-left: var(--edge); }
+    .chapter--boden .chapter-media { margin-left: 0; width: 100%; }
+    .chapter--kultur { grid-template-columns: 1fr; }
+    .chapter-print { justify-self: start; max-width: 100%; }
+  }
+
+  /* Above 1000px the rail is live and .p-chapters sits offset by (rail width + edge +
+     gap-lg). The bleed chapters' base rules above (mobile-safe, cancel just --edge)
+     aren't enough to reach that offset — reaching all the way to --gap-lg lands them
+     exactly flush with the rail's own right edge instead of the ~16px stray gap that
+     was there before (B2). Symbolically: (140px + edge + gap-lg) − gap-lg == edge +
+     140px == the rail's right edge, regardless of viewport width. Placed after the
+     base rules so these longhand overrides win the cascade at equal specificity. */
+  @media (min-width: 1001px) {
+    .chapter--kultur,
+    .chapter--tempo,
+    .waldkante {
+      margin-left: calc(-1 * var(--gap-lg));
+    }
+    .chapter--boden .chapter-media {
+      margin-left: calc(-1 * var(--gap-lg));
+      width: calc(100% + var(--gap-lg));
+    }
+    .chapter--energie {
+      margin-left: calc(-1 * var(--gap-lg));
+      margin-right: calc(-1 * var(--edge));
+    }
+  }
+
+  /* --- Pferdevision: the manifesto as real text, ink scrim over the frame --- */
+  .p-vision { position: relative; min-height: 90vh; display: flex; align-items: center; padding: clamp(64px, 10vw, 120px) 0; }
+  .p-vision-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .p-vision-scrim { position: absolute; inset: 0; background: linear-gradient(100deg, rgba(242,235,220,0.96) 0%, rgba(242,235,220,0.86) 45%, rgba(242,235,220,0.4) 100%); }
+  .p-vision-text { position: relative; z-index: 2; }
+  .p-manifesto { font-size: clamp(1.6rem, 2.6vw, 2.2rem); line-height: 1.5; max-width: 46ch; color: var(--bg); }
+
+  /* --- CTA --- */
+  .p-cta { position: relative; min-height: 60vh; display: flex; align-items: center; }
+  .p-cta-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .p-cta-scrim { position: absolute; inset: 0; background: linear-gradient(to right, rgba(13,20,8,0.9), rgba(13,20,8,0.55)); }
+  .p-cta-inner { position: relative; z-index: 2; padding: 72px var(--edge); }
+  .p-cta-inner h2 { margin: 10px 0 28px; }
+  .p-cta-links { display: flex; gap: 16px; flex-wrap: wrap; }
+</style>

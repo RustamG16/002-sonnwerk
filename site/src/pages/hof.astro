@@ -7,12 +7,13 @@ const sections = [
   {
     id: 'hanf', eyebrow: 'Unser Hanf', title: 'Vom Samen zum Öl.',
     copy: 'Auf unseren Feldern in Österreich wächst Hanf aus zertifiziertem Bio-Saatgut. Keine Pestizide, kein Kunstdünger — nur Sonne, Boden und Zeit. Jede Pflanze wird von Hand geerntet und schonend verarbeitet.',
-    media: ambient.hanf,
+    media: { src: null, poster: '/media/galerie/ernte.webp', alt: 'Hanf wird von Hand geerntet' },
   },
   {
     id: 'pferd', eyebrow: 'Arbeit mit dem Pferd', title: 'Kraft, die den Boden schont.',
     copy: 'Wo andere den Traktor starten, spannen wir ein. Die Arbeit mit dem Pferd verdichtet den Boden nicht, hält den Hof leise und uns ehrlich. Es ist langsamer. Genau deshalb machen wir es.',
     media: ambient.horses,
+    moreLink: '/arbeit-mit-dem-pferd/',
   },
   {
     id: 'kutschenfahrten', eyebrow: 'Kutschenfahrten', title: 'Der Hof, vom Kutschbock aus.',
@@ -28,7 +29,7 @@ const sections = [
       <div class="overlay"></div>
       <div class="wrap copy">
         <p class="eyebrow">Das Hofkollektiv</p>
-        <h1>Vom Samen zum Öl.</h1>
+        <h1>Der Hof hinter der Flasche.</h1>
         <p class="dim sub">Ein Hof in Österreich. Hanf, Pferde und die Überzeugung, dass man Qualität nicht abkürzen kann.</p>
       </div>
     </header>
@@ -40,6 +41,7 @@ const sections = [
           <p class="eyebrow reveal">{s.eyebrow}</p>
           <h2 class="reveal">{s.title}</h2>
           <p class="dim reveal">{s.copy}</p>
+          {s.moreLink && <a href={s.moreLink} class="more-link reveal">Mehr dazu →</a>}
         </div>
       </section>
     ))}
@@ -48,7 +50,7 @@ const sections = [
       <div class="wrap">
         <h2 class="reveal">Schmeck den Unterschied.</h2>
         <p class="dim reveal">Alles, was wir hier anbauen, findest Du im Shop — vom Feld in die Flasche.</p>
-        <a href="/shop/" class="btn reveal" style="border-color:#0D1408;color:#0D1408">Zum Shop</a>
+        <a href="/shop/" class="btn btn--ink reveal">Zum Shop</a>
       </div>
     </section>
   </main>
@@ -68,11 +70,17 @@ const sections = [
 
   .story {
     display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 5vw, 80px);
-    align-items: center; padding: 110px clamp(20px, 4vw, 48px); max-width: 1240px; margin: 0 auto;
+    align-items: center; padding: 110px var(--edge);
   }
   .story.flip .media { order: 2; }
   .story h2 { margin: 12px 0 18px; }
   .story .dim { max-width: 480px; }
+  .more-link {
+    display: inline-block; margin-top: 20px;
+    font-size: 0.8rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold);
+    border-bottom: 1px solid transparent; transition: border-color 0.25s;
+  }
+  .more-link:hover { border-color: var(--gold); }
 
   .cta { text-align: center; padding: 130px 0; }
   .cta h2 { margin-bottom: 14px; }

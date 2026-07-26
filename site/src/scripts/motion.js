@@ -15,7 +15,20 @@ if (!reducedMotion && !onJourneyPage) {
   lenis.on('scroll', ScrollTrigger.update);
   gsap.ticker.add((time) => lenis.raf(time * 1000));
   gsap.ticker.lagSmoothing(0);
+  window.__lenis = lenis; // QA hook — see CLAUDE.md verification protocol
 }
+
+/* Route in-page anchors through Lenis so it doesn't fight native smooth-scroll (header offset baked in) */
+document.querySelectorAll('a[href^="#"]').forEach((link) => {
+  link.addEventListener('click', (e) => {
+    const id = link.getAttribute('href').slice(1);
+    const target = id && document.getElementById(id);
+    if (!target) return;
+    e.preventDefault();
+    if (lenis) lenis.scrollTo(target, { offset: -96 });
+    else target.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' });
+  });
+});
 
 /* Stagger scroll reveals (replaces basic IO when GSAP available) */
 const reveals = gsap.utils.toArray('.reveal');
@@ -78,6 +91,10 @@ wireHoverLoops();
 
 document.querySelectorAll('.hover-video, [data-ambient-video]').forEach((video) => {
   video.addEventListener('error', () => video.remove());
+});
+
+document.querySelectorAll('[data-ambient-video]').forEach((video) => {
+  video.addEventListener('canplay', () => video.classList.add('is-ready'), { once: true });
 });
 
 export { lenis };

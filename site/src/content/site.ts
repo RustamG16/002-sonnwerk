@@ -29,7 +29,7 @@ export const journey = {
   ],
 };
 
-export type Category = { slug: string; name: string; image: string; hoverLoop?: string | null };
+export type Category = { slug: string; name: string; image: string; hoverLoop?: string | null; featured?: boolean };
 
 /** Gate 2 hover-loop paths — wired to /media/hover/; clips play on hover when files exist */
 export const hoverLoops: Record<string, string | null> = {
@@ -40,11 +40,14 @@ export const hoverLoops: Record<string, string | null> = {
   tierprodukte: '/media/hover/tierprodukte.mp4',
 };
 
+// Merch has no real product or photography from the Bitzan shoot (LOG.md 2026-07-14)
+// so it's left out per CLAUDE.md's "never invent products" rule — 6 real categories, not 7.
 export const categories: Category[] = [
-  { slug: 'oel',           name: 'Öl',           image: '/media/products/cat-oel.webp',          hoverLoop: hoverLoops.oel },
+  { slug: 'oel',           name: 'Öl',           image: '/media/products/cat-oel.webp',          hoverLoop: hoverLoops.oel, featured: true },
   { slug: 'kosmetik',      name: 'Kosmetik',     image: '/media/products/cat-kosmetik.webp',     hoverLoop: hoverLoops.kosmetik },
   { slug: 'gel',           name: 'Gel',          image: '/media/products/cat-gel.webp',            hoverLoop: hoverLoops.gel },
   { slug: 'balsam',        name: 'Balsam',       image: '/media/products/cat-balsam.webp',       hoverLoop: hoverLoops.balsam },
+  { slug: 'tee',           name: 'Tee',          image: '/media/products/cat-tee.webp',          hoverLoop: null },
   { slug: 'tierprodukte',  name: 'Tierprodukte', image: '/media/products/cat-tierprodukte.webp',   hoverLoop: hoverLoops.tierprodukte },
 ];
 
@@ -124,6 +127,12 @@ export const products: Product[] = [
       description: 'Mildes CBD-Öl, speziell dosiert für Hunde, in Bio-Hanfsamenöl.',
       anwendung: 'Je nach Gewicht 1–3 Tropfen ins Futter. Tierarzt fragen bei Unsicherheit.',
       labor: 'Laborgeprüft, THC-frei (<0,05%).' }),
+  P({ slug: 'hanftee-bud', name: 'Hanftee (Bud)', category: 'tee', price: 13.9, rating: 4.7, reviews: 12,
+      image: '/media/products/tee-bluete.webp',
+      short: 'Von Hand geerntete Blüten, sanft getrocknet.',
+      description: 'Getrocknete Hanfblüten aus eigenem Bio-Anbau, von Hand geerntet und schonend an der Luft getrocknet. Lose, ohne Zusätze.',
+      anwendung: '1 TL mit heißem Wasser (ca. 95°C) übergießen, 8–10 Minuten ziehen lassen.',
+      labor: 'Bio-zertifizierter Eigenanbau, laborgeprüft.' }),
 ];
 
 export const byCategory = (slug: string) => products.filter((p) => p.category === slug);
@@ -131,17 +140,28 @@ export const bySlug = (slug: string) => products.find((p) => p.slug === slug);
 export const euro = (n: number) => `€${n.toFixed(2).replace('.', ',')}`;
 
 export const principles = [
-  { title: 'Bio-Zertifiziert', copy: 'Kontrollierter biologischer Anbau in Österreich — Austria Bio Garantie, jede Charge laborgeprüft.' },
-  { title: 'Regional', copy: 'Vom eigenen Feld, verarbeitet und abgefüllt am Hof. Keine Importware, keine Zwischenhändler.' },
+  { title: 'Nachhaltigkeit, die Du fühlst.', copy: 'Weil wir nicht mit Trends gehen, sondern mit Prinzipien. Weil wir alles, was wir tun, ehrlich und transparent machen — damit Du spürst, was drin ist.' },
+  { title: 'Vollspektrum ist bei uns Standard.', copy: 'Kein Marketing-Blabla: Wir extrahieren selbst, schonend, in unserer eigenen Anlage. Was draufsteht, ist drin. Immer.' },
   { title: 'Handgefertigt', copy: 'Von Hand geerntet, mit dem Pferd bewirtschaftet, in kleinen Chargen gefertigt.' },
 ];
 
-export const quote = {
-  text: 'Man schmeckt, dass da ein Hof dahintersteht und kein Labor.',
-  author: 'Kundin aus Kärnten',
-};
+export const testimonials = [
+  {
+    text: 'Man spürt die Qualität. Die Gele und Balsame sind für mich ein täglicher Begleiter geworden. Rein, wirkungsvoll und mit gutem Gefühl, weil alles nachhaltig produziert wird.',
+    author: 'Corinna',
+  },
+  {
+    text: 'Kein Witz — ich habe über 20 angebrochene, teilweise nicht mal so billige Produkte der Konkurrenz weggeworfen, nachdem ich das Gel von Sonnwerk ausprobiert habe. Jetzt benutze ich nur noch das und einen Balsam — mehr brauche ich nicht gegen meine Gelenksschmerzen. Danke euch!',
+    author: 'Martin',
+  },
+  {
+    text: 'Das Beste, was ich je ausprobiert habe.',
+    author: 'Anna M.',
+  },
+];
 
-// Ambient loops: poster-first; src wired to Gate 2 paths (poster shows until mp4 lands in /media/ambient/)
+// Ambient loops: poster-first. Gate 2 never delivered these clips, so src stays null site-wide
+// (no 404s) — the paths are kept here so a loop can be dropped in later without touching markup.
 export const ambientPaths = {
   begleiter: '/media/ambient/begleiter.mp4',
   horses: '/media/ambient/horses.mp4',
@@ -151,11 +171,11 @@ export const ambientPaths = {
 } as const;
 
 export const ambient = {
-  begleiter: { src: ambientPaths.begleiter, poster: '/media/ambient/begleiter.webp', alt: 'Grasendes Pferd des Hofkollektivs' },
-  horses:    { src: ambientPaths.horses,    poster: '/media/ambient/horses.webp',    alt: 'Arbeit mit dem Pferd am Feld' },
-  harness:   { src: ambientPaths.harness,   poster: '/media/ambient/harness.webp', alt: 'Kutschengeschirr des Hofkollektivs' },
-  hanf:      { src: ambientPaths.hanf,      poster: '/media/ambient/hanf.webp',    alt: 'Junge Hanfpflanze am Feld' },
-  feld:      { src: ambientPaths.feld,      poster: '/media/ambient/feld.webp',    alt: 'Sonnenaufgang über dem Hanffeld' },
+  begleiter: { src: null, poster: '/media/ambient/begleiter.webp', alt: 'Grasendes Pferd des Hofkollektivs' },
+  horses:    { src: null, poster: '/media/ambient/horses.webp',    alt: 'Arbeit mit dem Pferd am Feld' },
+  harness:   { src: null, poster: '/media/ambient/harness.webp', alt: 'Kutschengeschirr des Hofkollektivs' },
+  hanf:      { src: null, poster: '/media/ambient/hanf.webp',    alt: 'Junge Hanfpflanze am Feld' },
+  feld:      { src: null, poster: '/media/ambient/feld.webp',    alt: 'Sonnenaufgang über dem Hanffeld' },
 };
 
 export const checkout = {

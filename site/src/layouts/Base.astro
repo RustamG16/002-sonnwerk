@@ -5,12 +5,13 @@ import Footer from '../components/Footer.astro';
 import CartDrawer from '../components/CartDrawer.astro';
 import { brand } from '../content/site';
 
-interface Props { title: string; description?: string; jsonLd?: object }
-const { title, description = `${brand.name} — ${brand.claim} BIO-CBD vom eigenen Hofkollektiv in Österreich.`, jsonLd } = Astro.props;
+interface Props { title: string; description?: string; jsonLd?: object; ogImage?: string }
+const { title, description = `${brand.name} — ${brand.claim} BIO-CBD vom eigenen Hofkollektiv in Österreich.`, jsonLd, ogImage = '/og.jpg' } = Astro.props;
 ---
 <!doctype html>
 <html lang="de">
   <head>
+    <script is:inline>document.documentElement.classList.add('js');</script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
@@ -19,7 +20,7 @@ const { title, description = `${brand.name} — ${brand.claim} BIO-CBD vom eigen
     <link rel="icon" type="image/png" href="/favicon.png" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content="/og.jpg" />
+    <meta property="og:image" content={ogImage} />
     <meta property="og:type" content="website" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -27,7 +28,9 @@ const { title, description = `${brand.name} — ${brand.claim} BIO-CBD vom eigen
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
   </head>
   <body class="grain">
+    <a href="#main" class="skip-link">Zum Inhalt springen</a>
     <Header />
+    <span id="main" tabindex="-1"></span>
     <slot />
     <Footer />
     <CartDrawer />

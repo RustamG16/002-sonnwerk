@@ -29,6 +29,7 @@ function init() {
   const scrubber = new FlipbookScrubber(canvas, cfg);
 
   const lenis = new Lenis({ lerp: 0.1 });
+  window.__lenis = lenis; // QA hook — see CLAUDE.md verification protocol
   const n = chapters.length;
   const dpr = () => Math.min(devicePixelRatio || 1, 2);
 

@@ -1,25 +1,29 @@
 ---
-/* Ambient-loop pattern: poster-first native <video>; falls back to poster on error or reduced-motion. */
+/* Ambient-loop pattern: the poster <img> is always the layout-defining element (normal
+   flow, real height) so the container never collapses while a src is unset or 404s. The
+   <video> layers on top absolutely and only becomes visible once it fires canplay. */
 interface Props { src: string | null; poster: string; alt: string; class?: string }
 const { src, poster, alt, class: cls = '' } = Astro.props;
 ---
 <div class={`ambient ${cls}`}>
+  <img src={poster} alt={alt} loading="lazy" data-ambient-poster />
   {src && (
     <video muted autoplay loop playsinline preload="none" poster={poster} aria-label={alt} data-ambient-video>
       <source src={src} type="video/mp4" />
     </video>
   )}
-  <img src={poster} alt={alt} class={src ? 'poster-fallback' : ''} loading="lazy" />
 </div>
 
 <style>
   .ambient { position: relative; overflow: hidden; }
-  .ambient :global(video), .ambient :global(img) { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 16 / 9; }
-  .ambient :global(video) { position: absolute; inset: 0; }
-  .poster-fallback { display: none; }
-  .ambient:not(:has(video)) :global(img) { display: block; position: relative; }
+  .ambient :global(img), .ambient :global(video) { width: 100%; object-fit: cover; aspect-ratio: 16 / 9; }
+  .ambient :global(img) { position: relative; height: auto; }
+  .ambient :global(video) {
+    position: absolute; inset: 0; height: 100%;
+    opacity: 0; transition: opacity 0.5s ease;
+  }
+  .ambient :global(video.is-ready) { opacity: 1; }
   @media (prefers-reduced-motion: reduce) {
     .ambient :global(video) { display: none; }
-    .poster-fallback, .ambient :global(img) { display: block; position: relative; }
   }
 </style>
