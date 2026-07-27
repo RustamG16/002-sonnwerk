@@ -31,8 +31,10 @@ export class FlipbookScrubber {
     img.decoding = 'async';
     img.onload = () => {
       this.loaded.add(i);
-      if (this.current === -1 && i === 0) this.draw(0);
-      else if (i === this.current) this.draw(i);   // upgrade a fallback draw
+      if (this.current === -1 && i === 0) {
+        this.draw(0);
+        this.canvas.classList.add('is-ready');
+      } else if (i === this.current) this.draw(i);   // upgrade a fallback draw
     };
     img.src = this.src(i);
     this.images[i] = img;
@@ -69,8 +71,13 @@ export class FlipbookScrubber {
   }
   resize() {
     const dpr = Math.min(devicePixelRatio || 1, 2);
-    this.canvas.width = innerWidth * dpr;
-    this.canvas.height = innerHeight * dpr;
+    const w = Math.max(1, Math.round(innerWidth));
+    const h = Math.max(1, Math.round(innerHeight));
+    // Bitmap in device pixels; CSS size in layout pixels (critical with Windows 125%/150% scaling)
+    this.canvas.width = Math.round(w * dpr);
+    this.canvas.height = Math.round(h * dpr);
+    this.canvas.style.width = `${w}px`;
+    this.canvas.style.height = `${h}px`;
   }
   draw(i) {
     const j = this.nearestLoaded(i);
