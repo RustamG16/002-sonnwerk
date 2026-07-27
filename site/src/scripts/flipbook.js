@@ -31,32 +31,21 @@ export class FlipbookScrubber {
     img.decoding = 'async';
     img.onload = () => {
       this.loaded.add(i);
-      if (this.current === -1 && i === 0) {
-        this.draw(0);
-        this.canvas.classList.add('is-ready');
-      } else if (i === this.current) this.draw(i);   // upgrade a fallback draw
+      if (this.current === -1 && i === 0) this.draw(0);
+      else if (i === this.current) this.draw(i);   // upgrade a fallback draw
     };
     img.src = this.src(i);
     this.images[i] = img;
   }
   preload() {
-    // Keep decode pressure low on Windows laptops — flooding 384 webps freezes the main thread
-    // so the sticky hero feels "stuck" on the poster while scroll events can't keep up.
     this.load(0);
-    for (let i = 0; i < this.lazyStart; i += 12) this.load(i);
-    const idle = (fn) => (
-      window.requestIdleCallback
-        ? requestIdleCallback(fn, { timeout: 120 })
-        : setTimeout(fn, 80)
-    );
+    for (let i = 0; i < this.lazyStart; i += 8) this.load(i);      // coarse pass, eager region
+    const idle = (fn) => (window.requestIdleCallback ? requestIdleCallback(fn) : setTimeout(fn, 60));
     let i = 0;
-    const batch = this.isMobile ? 4 : 2;
     const fill = () => {
       let done = 0;
-      while (i < this.count && done < batch) { this.load(i); i++; done++; }
-      if (i === this.lazyStart) {
-        for (let k = this.lazyStart; k < this.count; k += 12) this.load(k);
-      }
+      while (i < this.count && done < 6) { this.load(i); i++; done++; }
+      if (i === this.lazyStart) for (let k = this.lazyStart; k < this.count; k += 8) this.load(k); // coarse pass, lazy region
       if (i < this.count) idle(fill);
     };
     idle(fill);
@@ -71,13 +60,8 @@ export class FlipbookScrubber {
   }
   resize() {
     const dpr = Math.min(devicePixelRatio || 1, 2);
-    const w = Math.max(1, Math.round(innerWidth));
-    const h = Math.max(1, Math.round(innerHeight));
-    // Bitmap in device pixels; CSS size in layout pixels (critical with Windows 125%/150% scaling)
-    this.canvas.width = Math.round(w * dpr);
-    this.canvas.height = Math.round(h * dpr);
-    this.canvas.style.width = `${w}px`;
-    this.canvas.style.height = `${h}px`;
+    this.canvas.width = innerWidth * dpr;
+    this.canvas.height = innerHeight * dpr;
   }
   draw(i) {
     const j = this.nearestLoaded(i);
