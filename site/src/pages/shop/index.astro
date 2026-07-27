@@ -1,7 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import ProductCard from '../../components/ProductCard.astro';
-import { products, categories } from '../../content/site';
+import { products, shopCategories } from '../../content/site';
 ---
 <Base title="Shop — Apotheke der Natur | SONNWERK">
   <main class="shop wrap">
@@ -9,7 +9,7 @@ import { products, categories } from '../../content/site';
     <h1>Apotheke der Natur</h1>
     <nav class="pills" aria-label="Kategorien">
       <a href="/shop/" class="pill active">Alle</a>
-      {categories.map((c) => <a href={`/shop/${c.slug}/`} class="pill">{c.name}</a>)}
+      {shopCategories.map((c) => <a href={`/shop/${c.slug}/`} class="pill">{c.name}</a>)}
     </nav>
     <div class="grid">
       {products.map((p) => <ProductCard product={p} />)}

@@ -56,6 +56,31 @@ if (reveals.length && !reducedMotion) {
   reveals.forEach((el) => el.classList.add('in'));
 }
 
+/* Waldkante band parallax (pferd page). The band is a 9.5:1 letterbox with the image
+   oversized to --band-overscale, so this drift moves it inside its own clip — no layout
+   shift, nothing outside the strip revealed. Travel must stay under half the overhang;
+   see the .waldkante-band comment in arbeit-mit-dem-pferd.astro.
+   Trigger is the band itself (not the wrapping .waldkante with its heading) so the full
+   ±18% plays while the strip is on screen rather than being diluted across the h2. */
+if (!reducedMotion) {
+  document.querySelectorAll('[data-parallax-band]').forEach((img) => {
+    gsap.fromTo(
+      img,
+      { yPercent: -18 },
+      {
+        yPercent: 18,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: img.closest('.waldkante-band') || img,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: true,
+        },
+      },
+    );
+  });
+}
+
 /* Galerie teaser parallax */
 if (!reducedMotion) {
   document.querySelectorAll('[data-parallax-item]').forEach((img, i) => {

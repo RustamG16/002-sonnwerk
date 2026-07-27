@@ -38,7 +38,6 @@ prod = {
     'creme-set.webp':    B('product', '©ApolloniaTheresaBitzan202511132207368Q3A6675-2-2048x2048.jpg'),
     'deocreme.webp':     B('product', '©ApolloniaTheresaBitzan202511132248408Q3A6714-2-2048x2048.jpg'),
     'shampoo.webp':      B('product', '©ApolloniaTheresaBitzan202511132302568Q3A6720-2-2048x2048.jpg'),
-    'tee-bluete.webp':   B('farm', 'Bud.jpg'),
 }
 for name, src in prod.items():
     save(src, P(name), (1, 1), 800)
@@ -47,19 +46,21 @@ for name, src in prod.items():
 cats = {
     'cat-oel.webp': prod['oel-5.webp'], 'cat-gel.webp': prod['gel.webp'],
     'cat-balsam.webp': prod['balsam.webp'], 'cat-kosmetik.webp': prod['creme-set.webp'],
-    'cat-tee.webp': prod['tee-bluete.webp'],
+    'cat-deocreme.webp': prod['deocreme.webp'],
 }
 for name, src in cats.items():
     save(src, P(name), (1, 1), 800)
 save(B('horse', '21-8Q3A9319.jpg'), P('cat-tierprodukte.webp'), (1, 1), 800)
 
+NANO = os.path.join(HERE, '..', 'assets-in', 'NANO')
+
 # --- ambient 16:9 ---
 save(B('horse', '6-8Q3A8996.jpg'),  A('horses.webp'),    (16, 9), 1600)   # ploughing team
-save(B('horse', '21-8Q3A9319.jpg'), A('begleiter.webp'), (16, 9), 1600)   # grazing horse (band)
+save(os.path.join(NANO, 'Farm_dog_lying_in_grass_202607270254.jpeg'), A('begleiter.webp'), (16, 9), 1600)  # Hofhund (band)
 save(B('horse', '51-8Q3A9679.jpg'), A('harness.webp'),   (16, 9), 1600)   # Kutschenfahrten texture
 save(B('farm', '8Q3A5932-scaled-1.jpg'), A('hanf.webp'), (16, 9), 1600)   # young hemp plant
-# hof hero = journey chapter-1 poster (sunrise field)
-save(os.path.join(MEDIA, 'journey', 'poster-c1.webp'), A('feld.webp'), (16, 9), 1600)
+# hof hero = black horse in farmyard (NANO)
+save(os.path.join(NANO, 'Black_horse_in_farmyard_2K_202607270315.jpeg'), A('feld.webp'), (16, 9), 1600)
 
 # --- logos ---
 solo = Image.open(B('logo', 'cropped-Logo-SonnwerkSolo-270x270.png'))

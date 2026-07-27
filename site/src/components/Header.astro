@@ -15,7 +15,7 @@ const links = [
   <div class="bar">
     <a href="/" class="logo serif">
       <img src="/logo-mark.png" alt="" width="34" height="34" />
-      SONN<span class="gold">WERK</span>
+      <span class="logo-word">SONN<span class="logo-apos">'</span><span class="gold">WERK</span></span>
     </a>
 
     <nav class="nav-desktop" aria-label="Hauptnavigation">
@@ -102,10 +102,18 @@ const links = [
   .site-header.scrolled .bar { height: 56px; }
 
   .logo {
-    font-size: 1.35rem; letter-spacing: 0.14em;
+    font-size: 1.35rem;
     display: flex; align-items: center; gap: 10px;
     transition: transform 0.4s var(--spring);
   }
+  /* Open tracking so N / ' / W don’t mesh; .serif’s -0.01em was pulling it tight. */
+  .logo-word { letter-spacing: 0.18em; }
+  .logo-apos {
+    letter-spacing: 0;
+    color: var(--paper);
+  }
+  .logo-word .gold { margin-left: 0.12em; }
+  .site-header.theme-paper .logo-apos { color: var(--bg); }
   .site-header.scrolled .logo { transform: scale(0.92); transform-origin: left center; }
   .logo img { width: 34px; height: 34px; transition: width 0.4s var(--spring), height 0.4s var(--spring); }
   .site-header.scrolled .logo img { width: 30px; height: 30px; }

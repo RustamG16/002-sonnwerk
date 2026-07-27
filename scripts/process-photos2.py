@@ -6,6 +6,7 @@ from PIL import Image
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 G0 = os.path.join(HERE, '..', 'assets-in', 'gate0')
+NANO = os.path.join(HERE, '..', 'assets-in', 'NANO')
 MEDIA = os.path.join(HERE, '..', 'site', 'public', 'media')
 
 def crop_ratio(img, rw, rh, fx=0.5, fy=0.5):
@@ -44,17 +45,17 @@ prod = {
 for name, src in prod.items():
     save(src, P(name), (1, 1), 1100)
 
-# tea jar (cat + jar photo): focus window on the jar, left third
-save(B('farm', '8Q3A6133-scaled.jpg'), P('tee-bluete.webp'), (1, 1), 1100, fx=0.12)
+# Deocreme studio still for the homepage bento slot (replaces Tee grass jar — never restore 8Q3A6133)
+save(prod['deocreme.webp'], P('cat-deocreme.webp'), (1, 1), 1100)
 
 cats = {
     'cat-oel.webp': 'oel-5.webp', 'cat-gel.webp': 'gel.webp', 'cat-balsam.webp': 'balsam.webp',
-    'cat-kosmetik.webp': 'creme-set.webp', 'cat-tee.webp': 'tee-bluete.webp',
+    'cat-kosmetik.webp': 'creme-set.webp',
     'cat-tierprodukte.webp': 'oel-hunde.webp',
 }
 for name, src in cats.items():
     save(P(src), P(name), (1, 1), 1100)
 
-# Begleiter band: keep the horse's head — pull crop window to the top
-save(B('horse', '21-8Q3A9319.jpg'), A('begleiter.webp'), (16, 9), 1600, fy=0.12)
+# Begleiter band: Hofhund in grass — bias crop toward the dog (right of center)
+save(os.path.join(NANO, 'Farm_dog_lying_in_grass_202607270254.jpeg'), A('begleiter.webp'), (16, 9), 1600, fx=0.62, fy=0.45)
 print('done')

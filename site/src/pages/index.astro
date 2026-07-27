@@ -78,7 +78,7 @@ const jsonLd = {
       <div class="grid-bento">
         {categories.map((c) => (
           <a
-            href={`/shop/${c.slug}/`}
+            href={c.href ?? `/shop/${c.slug}/`}
             class={`cat reveal cat--${c.slug} ${c.featured ? 'cat--featured' : ''}`}
             data-hover-loop={c.hoverLoop ?? ''}
           >
@@ -253,7 +253,6 @@ const jsonLd = {
   .principle p { max-width: 58ch; }
 
   .cats { padding: var(--section-y) 0; }
-  .cats .wrap { max-width: 1180px; margin: 0 auto; } /* the featured tile uses height:100% to match the 2-row span — an edge-to-edge grid stretches it disproportionately, so cap+center the whole composition (heading included) rather than leave a lopsided gap beside a capped grid */
   .cats h2 { margin: 14px 0 clamp(40px, 6vw, 60px); }
   /* grid-auto-flow: dense + one --featured span so adding/removing a category (5, 6, 7...)
      can never break the layout — no more hand-placed grid-column/grid-row per slug. */
@@ -263,17 +262,38 @@ const jsonLd = {
     grid-auto-flow: dense;
     gap: 28px;
   }
+  .cat {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+  }
   .cat--featured { grid-column: span 2; grid-row: span 2; }
   .cat .media {
     display: block; background: var(--paper); aspect-ratio: 1; overflow: hidden; position: relative;
     box-shadow: inset 0 0 0 1px rgba(13, 20, 8, 0.06);
   }
-  .cat--featured .media { aspect-ratio: auto; height: 100%; min-height: 280px; }
+  /* Featured media flexes into the cell leftover AFTER the label — height:100% used to
+     swallow the label row and push "Öl" into the tiles below. */
+  .cat--featured .media {
+    flex: 1 1 auto;
+    height: auto;
+    min-height: 280px;
+    aspect-ratio: auto;
+  }
   .cat img, .cat .hover-video { width: 100%; height: 100%; object-fit: cover; transition: transform 0.55s var(--spring), opacity 0.4s ease; }
   .cat .hover-video { position: absolute; inset: 0; opacity: 0; pointer-events: none; }
   .cat:hover img { transform: scale(1.05); }
   .cat:hover .hover-video { opacity: 1; }
-  .cat .label { display: block; padding: 14px 0; font-size: 0.8rem; letter-spacing: 0.24em; text-transform: uppercase; }
+  .cat .label {
+    display: block;
+    flex-shrink: 0;
+    padding: 16px 0 8px;
+    font-size: 0.8rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+  }
+  .cat--featured .label { padding-bottom: 12px; }
 
   .dogband { position: relative; min-height: 70vh; display: flex; align-items: center; }
   .dogband :global(.bg) { position: absolute; inset: 0; }
@@ -336,9 +356,16 @@ const jsonLd = {
   }
 
   .trust { padding: clamp(48px, 8vw, 80px) 0; border-top: 1px solid var(--line); }
-  .trust-inner { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: clamp(20px, 3vw, 40px); align-items: start; }
+  .trust-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: clamp(20px, 3vw, 40px);
+    align-items: start;
+    width: 100%;
+  }
+  .trust-item { min-width: 0; }
   .trust-label { display: block; font-size: 0.72rem; letter-spacing: 0.24em; text-transform: uppercase; margin-bottom: 8px; }
-  .trust-label + .dim { font-size: 0.88rem; max-width: 280px; }
+  .trust-label + .dim { font-size: 0.88rem; max-width: none; }
   .trust-rule { width: 1px; align-self: stretch; background: var(--line); min-height: 48px; }
 
   @media (max-width: 800px) {

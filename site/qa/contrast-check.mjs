@@ -11,6 +11,18 @@ const BASE = process.env.SCREEN_BASE_URL ?? "http://localhost:4321";
 
 const TARGETS = [
   {
+    /* Hero is the LCP element and its frame changed to a much brighter overcast render
+       (Gate-1 NANO), so the scrim it was tuned against no longer describes what's behind
+       the copy. Measured, not eyeballed. */
+    route: "/arbeit-mit-dem-pferd/",
+    section: ".p-hero",
+    scrollToSectionTop: ".p-hero",
+    texts: [
+      { sel: ".p-hero .eyebrow", color: { r: 232, g: 163, b: 61 }, alpha: 1, minRatio: 4.5 },
+      { sel: ".p-hero h1", color: { r: 242, g: 235, b: 220 }, alpha: 1, minRatio: 3 },
+    ],
+  },
+  {
     route: "/arbeit-mit-dem-pferd/",
     section: ".chapter--energie",
     texts: [
@@ -25,6 +37,16 @@ const TARGETS = [
     texts: [
       { sel: ".p-vision .eyebrow", color: { r: 101, g: 77, b: 29 }, alpha: 1, minRatio: 4.5 },
       { sel: ".p-manifesto", color: { r: 13, g: 20, b: 8 }, alpha: 1, minRatio: 4.5 },
+    ],
+  },
+  {
+    /* Added when Mitfahren's copy moved to the right half of the frame (Pass 3 Phase 1b) —
+       the scrim inverted with it, so this section needs its own measured check. */
+    route: "/arbeit-mit-dem-pferd/",
+    section: ".p-cta",
+    texts: [
+      { sel: ".p-cta .eyebrow", color: { r: 232, g: 163, b: 61 }, alpha: 1, minRatio: 4.5 },
+      { sel: ".p-cta h2", color: { r: 242, g: 235, b: 220 }, alpha: 1, minRatio: 3 },
     ],
   },
   {
@@ -74,11 +96,24 @@ for (const target of TARGETS) {
   }
   await page.waitForTimeout(400);
 
-  const boxes = await page.evaluate((texts) => {
+  /* Per-LINE boxes, not the element box. A block-level <p> or <h1> is as wide as its
+     container even when the glyphs are a fraction of that — .p-hero .eyebrow measures
+     1792px wide for ~206px of text. Sampling the element box therefore averaged the dark
+     panel behind the words together with the bright photo beside them and reported 4.81:1
+     for text that actually sits at ~8.7:1. Range.getClientRects() returns the real line
+     boxes, so we sample only where glyphs are, and every line rather than just the middle
+     one (the middle line was also hiding worst-case lines over busy photography). */
+  const lineRects = await page.evaluate((texts) => {
     return texts.map(({ sel }) => {
       const el = document.querySelector(sel);
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      const rects = [...range.getClientRects()]
+        .filter((r) => r.width >= 8 && r.height >= 6)
+        .map((r) => ({ left: r.left, top: r.top, width: r.width, height: r.height }));
+      if (rects.length) return rects;
       const r = el.getBoundingClientRect();
-      return { left: r.left, top: r.top, width: r.width, height: r.height };
+      return [{ left: r.left, top: r.top, width: r.width, height: r.height }];
     });
   }, target.texts);
 
@@ -93,19 +128,25 @@ for (const target of TARGETS) {
   console.log(`\n=== ${target.route} ${target.section} ===`);
   for (let i = 0; i < target.texts.length; i++) {
     const { sel, color, alpha, minRatio } = target.texts[i];
-    const box = boxes[i];
-    const y = Math.max(0, Math.round(box.top + box.height / 2));
-    const x0 = Math.max(0, Math.round(box.left));
-    const w = Math.max(1, Math.round(box.width));
-    const { data } = await img.clone().extract({ left: x0, top: Math.max(0, y - 2), width: w, height: 4 }).raw().toBuffer({ resolveWithObject: true });
-    let r = 0, g = 0, b = 0, n = data.length / 3;
-    for (let j = 0; j < data.length; j += 3) { r += data[j]; g += data[j + 1]; b += data[j + 2]; }
-    const bg = { r: Math.round(r / n), g: Math.round(g / n), b: Math.round(b / n) };
-    const composited = blend(color, alpha, bg);
-    const ratio = contrast(composited, bg);
+    // Worst line governs — one illegible line is an illegible block.
+    let ratio = Infinity;
+    let worstLine = 0;
+    for (const [li, box] of lineRects[i].entries()) {
+      const y = Math.max(0, Math.round(box.top + box.height / 2));
+      const x0 = Math.max(0, Math.round(box.left));
+      const w = Math.max(1, Math.round(box.width));
+      const { data } = await img.clone().extract({ left: x0, top: Math.max(0, y - 2), width: w, height: 4 }).raw().toBuffer({ resolveWithObject: true });
+      let r = 0, g = 0, b = 0; const n = data.length / 3;
+      for (let j = 0; j < data.length; j += 3) { r += data[j]; g += data[j + 1]; b += data[j + 2]; }
+      const bg = { r: Math.round(r / n), g: Math.round(g / n), b: Math.round(b / n) };
+      const lineRatio = contrast(blend(color, alpha, bg), bg);
+      if (lineRatio < ratio) { ratio = lineRatio; worstLine = li + 1; }
+    }
+    const lines = lineRects[i].length;
     const pass = ratio >= minRatio;
     if (!pass) anyFail = true;
-    console.log(`  ${sel}: ${ratio.toFixed(2)}:1 (needs ${minRatio}:1) — ${pass ? "PASS" : "FAIL"}`);
+    const where = lines > 1 ? ` [worst of ${lines} lines: #${worstLine}]` : "";
+    console.log(`  ${sel}: ${ratio.toFixed(2)}:1 (needs ${minRatio}:1) — ${pass ? "PASS" : "FAIL"}${where}`);
   }
   await page.close();
 }

@@ -36,7 +36,17 @@ const year = new Date().getFullYear();
 
 <style>
   footer { border-top: 1px solid var(--line); padding: 72px 0 40px; margin-top: 0; }
-  .grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; }
+  /* The nav columns hug their own text instead of taking an equal 1fr each. With four
+     equal-ish tracks the last column was 334px wide holding ~110px of links, so the
+     footer looked like it stopped short of the right edge — the gap was inside the
+     column, not in the grid. Content-width tracks plus space-between put the last link
+     list flush on the page edge, directly above the © line, which is already flush. */
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 400px) repeat(3, max-content);
+    justify-content: space-between;
+    gap: 40px;
+  }
   .brandimg { width: 280px; margin-bottom: 16px; }
   .small { font-size: 0.85rem; }
   nav { display: flex; flex-direction: column; gap: 10px; }
@@ -44,5 +54,9 @@ const year = new Date().getFullYear();
   nav a:hover { color: var(--paper); }
   .eyebrow { margin-bottom: 6px; }
   .trust { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; border-top: 1px solid var(--line); margin-top: 56px; padding-top: 24px; }
-  @media (max-width: 800px) { .grid { grid-template-columns: 1fr 1fr; } }
+  /* justify-content must reset too — space-between across two stacked rows would strand
+     the columns apart once the tracks are 1fr again. */
+  @media (max-width: 800px) {
+    .grid { grid-template-columns: 1fr 1fr; justify-content: stretch; }
+  }
 </style>

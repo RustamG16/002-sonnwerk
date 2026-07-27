@@ -29,7 +29,15 @@ export const journey = {
   ],
 };
 
-export type Category = { slug: string; name: string; image: string; hoverLoop?: string | null; featured?: boolean };
+export type Category = {
+  slug: string;
+  name: string;
+  image: string;
+  hoverLoop?: string | null;
+  featured?: boolean;
+  /** If set, homepage tile links here instead of /shop/{slug}/ (product spotlight). */
+  href?: string;
+};
 
 /** Gate 2 hover-loop paths — wired to /media/hover/; clips play on hover when files exist */
 export const hoverLoops: Record<string, string | null> = {
@@ -41,15 +49,19 @@ export const hoverLoops: Record<string, string | null> = {
 };
 
 // Merch has no real product or photography from the Bitzan shoot (LOG.md 2026-07-14)
-// so it's left out per CLAUDE.md's "never invent products" rule — 6 real categories, not 7.
+// so it's left out per CLAUDE.md's "never invent products" rule.
+// Tee grass jar removed from the bento — Deocreme (real Bitzan still) takes that slot.
 export const categories: Category[] = [
   { slug: 'oel',           name: 'Öl',           image: '/media/products/cat-oel.webp',          hoverLoop: hoverLoops.oel, featured: true },
   { slug: 'kosmetik',      name: 'Kosmetik',     image: '/media/products/cat-kosmetik.webp',     hoverLoop: hoverLoops.kosmetik },
   { slug: 'gel',           name: 'Gel',          image: '/media/products/cat-gel.webp',            hoverLoop: hoverLoops.gel },
   { slug: 'balsam',        name: 'Balsam',       image: '/media/products/cat-balsam.webp',       hoverLoop: hoverLoops.balsam },
-  { slug: 'tee',           name: 'Tee',          image: '/media/products/cat-tee.webp',          hoverLoop: null },
+  { slug: 'deocreme',      name: 'Deocreme',     image: '/media/products/cat-deocreme.webp',     hoverLoop: null, href: '/produkt/bio-deocreme-rosenholz/' },
   { slug: 'tierprodukte',  name: 'Tierprodukte', image: '/media/products/cat-tierprodukte.webp',   hoverLoop: hoverLoops.tierprodukte },
 ];
+
+/** Real shop category pages only (excludes product-spotlight tiles). */
+export const shopCategories = categories.filter((c) => !c.href);
 
 export type Product = {
   slug: string; name: string; category: string; price: number; // EUR — placeholder until Woo fetch
@@ -127,12 +139,6 @@ export const products: Product[] = [
       description: 'Mildes CBD-Öl, speziell dosiert für Hunde, in Bio-Hanfsamenöl.',
       anwendung: 'Je nach Gewicht 1–3 Tropfen ins Futter. Tierarzt fragen bei Unsicherheit.',
       labor: 'Laborgeprüft, THC-frei (<0,05%).' }),
-  P({ slug: 'hanftee-bud', name: 'Hanftee (Bud)', category: 'tee', price: 13.9, rating: 4.7, reviews: 12,
-      image: '/media/products/tee-bluete.webp',
-      short: 'Von Hand geerntete Blüten, sanft getrocknet.',
-      description: 'Getrocknete Hanfblüten aus eigenem Bio-Anbau, von Hand geerntet und schonend an der Luft getrocknet. Lose, ohne Zusätze.',
-      anwendung: '1 TL mit heißem Wasser (ca. 95°C) übergießen, 8–10 Minuten ziehen lassen.',
-      labor: 'Bio-zertifizierter Eigenanbau, laborgeprüft.' }),
 ];
 
 export const byCategory = (slug: string) => products.filter((p) => p.category === slug);
@@ -171,11 +177,11 @@ export const ambientPaths = {
 } as const;
 
 export const ambient = {
-  begleiter: { src: null, poster: '/media/ambient/begleiter.webp', alt: 'Grasendes Pferd des Hofkollektivs' },
+  begleiter: { src: null, poster: '/media/ambient/begleiter.webp', alt: 'Hofhund liegt im Gras vor Stall und Weide' },
   horses:    { src: null, poster: '/media/ambient/horses.webp',    alt: 'Arbeit mit dem Pferd am Feld' },
   harness:   { src: null, poster: '/media/ambient/harness.webp', alt: 'Kutschengeschirr des Hofkollektivs' },
   hanf:      { src: null, poster: '/media/ambient/hanf.webp',    alt: 'Junge Hanfpflanze am Feld' },
-  feld:      { src: null, poster: '/media/ambient/feld.webp',    alt: 'Sonnenaufgang über dem Hanffeld' },
+  feld:      { src: null, poster: '/media/ambient/feld.webp',    alt: 'Schwarzes Arbeitspferd im Hof vor Stall und Hanffeld' },
 };
 
 export const checkout = {

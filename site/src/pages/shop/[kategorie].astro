@@ -1,10 +1,10 @@
 ---
 import Base from '../../layouts/Base.astro';
 import ProductCard from '../../components/ProductCard.astro';
-import { categories, byCategory } from '../../content/site';
+import { shopCategories, byCategory } from '../../content/site';
 
 export function getStaticPaths() {
-  return categories.map((c) => ({ params: { kategorie: c.slug }, props: { category: c } }));
+  return shopCategories.map((c) => ({ params: { kategorie: c.slug }, props: { category: c } }));
 }
 const { category } = Astro.props;
 const items = byCategory(category.slug);
@@ -15,7 +15,7 @@ const items = byCategory(category.slug);
     <h1>{category.name}</h1>
     <nav class="pills" aria-label="Kategorien">
       <a href="/shop/" class="pill">Alle</a>
-      {categories.map((c) => (
+      {shopCategories.map((c) => (
         <a href={`/shop/${c.slug}/`} class={`pill ${c.slug === category.slug ? 'active' : ''}`}>{c.name}</a>
       ))}
     </nav>

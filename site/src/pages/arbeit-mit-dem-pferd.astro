@@ -29,8 +29,9 @@ const jsonLd = {
         src={img('hero').src}
         srcset={img('hero').srcset}
         sizes="100vw"
-        width="1600" height="1066"
-        alt="Ein Mann steht Kopf an Kopf mit einem Pferd des Hofkollektivs SONNWERK"
+        width="1600" height="893"
+        fetchpriority="high" decoding="async"
+        alt="Ein Bauer mit Hut legt die Hand an den Kopf seines schwarzen Arbeitspferdes auf der Weide"
       />
       <div class="p-hero-scrim" aria-hidden="true"></div>
       <div class="p-hero-copy wrap">
@@ -67,13 +68,13 @@ const jsonLd = {
             <p class="dim reveal">Es gibt Wissen, dass man nicht durch Worte oder Videos vermitteln kann. Jenes wird lediglich in der Praxis von einer Generation an die nächste weitergegeben und wird dadurch zu einem Teil unserer Lebensart und Kultur. Zu dieser Art von Wissen zählen viele unserer bäuerlichen Tätigkeiten, so auch das richtige Arbeiten mit Pferden. Wir bei SONNWERK wollen einen wichtigen Beitrag dazu leisten, dass uns dieses Wissen nicht unwiederbringlich verloren geht.</p>
           </div>
           <figure class="chapter-print reveal-mask">
-            <img src={img('kultur').src} srcset={img('kultur').srcset} sizes="420px" width="1600" height="1066" loading="lazy" alt="Nahaufnahme einer Geschirrschnalle aus Leder" />
+            <img src={img('kultur').src} srcset={img('kultur').srcset} sizes="(max-width: 800px) 100vw, 620px" width="1600" height="1066" loading="lazy" alt="Nahaufnahme einer Geschirrschnalle aus Leder" />
             <figcaption class="dim">Geschirr, von Hand nachgezogen.</figcaption>
           </figure>
         </section>
 
         <section id="tempo" class="chapter chapter--tempo paper-section" data-chapter="tempo">
-          <img class="chapter-media reveal-mask" src={img('tempo').src} srcset={img('tempo').srcset} sizes="100vw" width="1600" height="1066" loading="lazy" alt="Ein Mann geht hinter dem Pferdegespann auf einem Feldweg" />
+          <img class="chapter-media reveal-mask" src={img('tempo').src} srcset={img('tempo').srcset} sizes="100vw" width="1600" height="893" loading="lazy" alt="Blick vom Kutschbock: Pferdegespann zieht die Kutsche auf dem Feldweg" />
           <div class="chapter-text">
             <p class="eyebrow reveal">Tempo</p>
             <h2 class="reveal">Menschgerechtes Arbeitstempo</h2>
@@ -83,7 +84,7 @@ const jsonLd = {
         </section>
 
         <section id="energie" class="chapter chapter--energie" data-chapter="energie">
-          <img class="chapter-media reveal-mask" src={img('energie').src} srcset={img('energie').srcset} sizes="100vw" width="1600" height="1066" loading="lazy" alt="Grasendes Pferd des Hofkollektivs in der Abendsonne" />
+          <img class="chapter-media reveal-mask" src={img('energie').src} srcset={img('energie').srcset} sizes="100vw" width="1600" height="1066" loading="lazy" alt="Das Pferdegespann zieht den Pflug über das sonnenbeschienene Feld" />
           <div class="chapter-scrim" aria-hidden="true"></div>
           <div class="chapter-text">
             <p class="eyebrow reveal">Energie</p>
@@ -102,7 +103,9 @@ const jsonLd = {
         </section>
 
         <div class="waldkante">
-          <img class="reveal-mask" src={img('waldkante').src} srcset={img('waldkante').srcset} sizes="100vw" width="1600" height="168" loading="lazy" alt="" />
+          <div class="waldkante-band">
+            <img class="reveal-mask" data-parallax-band src={img('waldkante').src} srcset={img('waldkante').srcset} sizes="100vw" width="1600" height="900" loading="lazy" alt="" />
+          </div>
           <h2 class="serif reveal">Das Pferdvolle an SONNWERK</h2>
         </div>
 
@@ -159,22 +162,68 @@ const jsonLd = {
 
 
   /* --- Hero --- */
-  .p-hero { position: relative; height: 80vh; min-height: 480px; overflow: hidden; }
-  .p-hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-  .p-hero-scrim {
-    position: absolute; inset: 0;
-    background: linear-gradient(to top, rgba(13, 20, 8, 0.88) 0%, rgba(13, 20, 8, 0.15) 55%, rgba(13, 20, 8, 0.35) 100%);
+  /* Structural split: dark text panel | photo. Grid (not object-fit:contain) so the
+     photo always fills its column edge-to-edge regardless of viewport aspect. */
+  .p-hero {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(280px, 0.9fr) 1.1fr;
+    height: 80vh; min-height: 480px;
+    overflow: hidden; background: var(--bg);
   }
-  .p-hero-copy { position: absolute; left: 0; right: 0; bottom: 64px; z-index: 2; }
-  .p-hero-copy h1 { max-width: 900px; text-shadow: 0 2px 24px rgba(13, 20, 8, 0.5); }
-  .p-hero-copy .eyebrow { text-shadow: 0 1px 8px rgba(13, 20, 8, 0.6); }
+  .p-hero-img {
+    grid-column: 2; grid-row: 1;
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center 20%;
+  }
+  /* Desktop: light top fade only over the photo for nav contrast; left column stays
+     a clean dark panel. Mobile overrides with a denser bottom scrim for text-on-photo. */
+  .p-hero-scrim {
+    grid-column: 2; grid-row: 1;
+    z-index: 1; pointer-events: none;
+    background: linear-gradient(to bottom, rgba(13, 20, 8, 0.45) 0%, transparent 28%);
+  }
+  .p-hero-copy {
+    grid-column: 1; grid-row: 1;
+    position: relative; z-index: 2;
+    align-self: center;
+    padding-block: 48px;
+  }
+  .p-hero-copy h1 { max-width: 18ch; }
+
+  /* Phone: collapse to full-bleed cover with copy on the dense bottom scrim. */
+  @media (max-width: 800px) {
+    .p-hero { display: block; }
+    .p-hero-img {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; object-position: 50% 12%;
+    }
+    .p-hero-scrim {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(13, 20, 8, 0.88) 0%, rgba(13, 20, 8, 0.15) 55%, rgba(13, 20, 8, 0.35) 100%);
+    }
+    .p-hero-copy {
+      position: absolute; left: 0; right: 0; bottom: 56px; top: auto;
+      align-self: auto; padding-block: 0;
+    }
+    .p-hero-copy h1 { max-width: 900px; text-shadow: 0 2px 24px rgba(13, 20, 8, 0.5); }
+    .p-hero-copy .eyebrow { text-shadow: 0 1px 8px rgba(13, 20, 8, 0.6); }
+  }
 
   /* --- Layout: sticky tag rail + chapters --- */
   .p-body { position: relative; background: var(--bg); }
   .p-rail {
-    position: sticky; top: 96px; align-self: start;
+    /* top: 128 not 96 — 96 is the header's own height, so the first tag kissed the header
+       bar the moment it stuck. The extra 32px is the air.
+       padding-block matches .chapter's vertical rhythm, and does two jobs: unstuck, it
+       drops "Boden" level with the first chapter's heading instead of jamming it under
+       the hero; stuck, sticky clamps the element's *padding box* inside .p-body, so the
+       bottom padding lifts "Handwerk" clear of the Pferdevision edge instead of letting
+       it ride the seam. */
+    position: sticky; top: 128px; align-self: start;
     display: flex; flex-direction: column; gap: 22px;
-    float: left; width: 140px; margin-left: var(--edge); padding-top: 8px;
+    float: left; width: 140px; margin-left: var(--edge);
+    padding-block: clamp(64px, 10vw, 120px);
   }
   .p-rail a {
     font-size: 0.68rem; letter-spacing: 0.26em; text-transform: uppercase; color: var(--cream-dim);
@@ -203,15 +252,27 @@ const jsonLd = {
   .chapter--boden .chapter-text { padding-right: var(--edge); }
 
   /* KULTUR: cream · text-forward, small pinned print with a caption rule */
-  .chapter--kultur { display: grid; grid-template-columns: 1.3fr 1fr; gap: var(--gap-lg); align-items: start; padding: clamp(64px, 10vw, 120px) var(--edge); margin: 0 calc(-1 * var(--edge)); }
-  .chapter-print { max-width: 340px; justify-self: end; }
+  /* The text column now hugs its own 640px measure instead of taking 1.3fr of a 1572px
+     container, and the print roughly doubles (340 → 620). Before, 640px of text and a
+     340px print left ~600px of nothing between them at 1920 — a hole, not white space.
+     Sized this way the pair spans most of the column and the gutter reads as a gutter. */
+  .chapter--kultur { display: grid; grid-template-columns: minmax(0, 640px) minmax(0, 1fr); gap: var(--gap-lg); align-items: start; padding: clamp(64px, 10vw, 120px) var(--edge); margin: 0 calc(-1 * var(--edge)); }
+  .chapter-print { max-width: 620px; justify-self: end; }
   .chapter-print img { width: 100%; aspect-ratio: 3/2; object-fit: cover; }
   .chapter-print figcaption { font-size: 0.8rem; padding-top: 10px; margin-top: 10px; border-top: 1px solid rgba(13, 20, 8, 0.16); }
 
   /* TEMPO: cream · widest, quietest frame + only the proverb and one paragraph */
   .chapter--tempo { padding: clamp(64px, 10vw, 120px) var(--edge); margin: 0 calc(-1 * var(--edge)); }
-  .chapter--tempo .chapter-media { width: 100%; aspect-ratio: 21/9; object-fit: cover; margin-bottom: clamp(32px, 5vw, 56px); }
-  .chapter--tempo .chapter-text { max-width: 60ch; }
+  .chapter--tempo .chapter-media { width: 100%; aspect-ratio: 21/9; object-fit: cover; object-position: center 68%; margin-bottom: clamp(32px, 5vw, 56px); }
+  /* Tempo is the caesura — the chapter about not hurrying — so it's the one section that
+     centres under its own full-width frame instead of running down the left edge. That
+     also closes the dead half-page of cream the left-set 60ch column used to leave. */
+  .chapter--tempo .chapter-text { max-width: 64ch; margin-inline: auto; text-align: center; }
+  .chapter--tempo .chapter-text blockquote { max-width: 30ch; margin-inline: auto; }
+  /* The running paragraph stays left-aligned inside the centred block: centring six lines
+     of German body copy makes every line start in a different place and costs more in
+     readability than the symmetry returns. Short elements centre, prose doesn't. */
+  .chapter--tempo .chapter-text .dim { text-align: left; max-width: 58ch; margin-inline: auto; }
 
   /* ENERGIE: dark · text set over the frame, gold vignette */
   .chapter--energie { position: relative; padding: 0; min-height: 78vh; display: flex; align-items: flex-end; }
@@ -223,7 +284,14 @@ const jsonLd = {
     background: linear-gradient(to top, rgba(13,20,8,0.95) 0%, rgba(13,20,8,0.9) 55%, rgba(13,20,8,0.3) 80%, rgba(13,20,8,0.05) 100%),
       linear-gradient(135deg, rgba(232,163,61,0.14), transparent 55%);
   }
-  .chapter--energie .chapter-text { position: relative; z-index: 2; padding: 0 var(--edge) 72px; }
+  /* Right-set, continuing the page's left/right alternation (Boden R · Kultur L · Energie R
+     · Kreislauf L · Handwerk R · Pferdevision L · Mitfahren R). The section is bled to the
+     right viewport edge above and .chapter-text keeps its own --edge padding-right, so
+     margin-left:auto lands the copy on .p-chapters' content right edge — the same line
+     Kultur's print ends on. Note Boden's and Handwerk's text stop ~70-100px short of that
+     line: they're capped at 640px inside wider grid columns and align to column start, so
+     their right edges are ragged by design. Measure stays 640px here — no second cap. */
+  .chapter--energie .chapter-text { position: relative; z-index: 2; padding: 0 var(--edge) 72px; margin-left: auto; }
 
   /* KREISLAUF: dark · driest chapter — small, unglamorous image, text does the work */
   .chapter--kreislauf { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: var(--gap-lg); }
@@ -232,7 +300,20 @@ const jsonLd = {
 
   /* Waldkante divider — the client's own idiom, used once */
   .waldkante { position: relative; margin: 0 calc(-1 * var(--edge)); }
-  .waldkante img { width: 100%; display: block; aspect-ratio: 1600/168; object-fit: cover; }
+  /* The band keeps a wide letterbox and clips it; the image inside is oversized by
+     --band-overscale so the parallax scrub has slack to travel without ever exposing an
+     edge. Travel in motion.js is ±18%, inside the ~22% overhang of a 180% overscale.
+     1600/220 (was 168) gives the canopy/sky edge room to drift — on a uniform hemp wall
+     the eye needs that horizon landmark or the ±40px shift reads as nothing. */
+  .waldkante-band { position: relative; overflow: hidden; aspect-ratio: 1600/220; --band-overscale: 180%; }
+  .waldkante-band img {
+    position: absolute; left: 0; top: calc((100% - var(--band-overscale)) / 2);
+    width: 100%; height: var(--band-overscale); object-fit: cover; object-position: center 20%; display: block;
+  }
+  /* Reduced motion / JS-off: no drift, so the image sits flush at natural size. */
+  @media (prefers-reduced-motion: reduce) {
+    .waldkante-band { --band-overscale: 100%; }
+  }
   .waldkante h2 { text-align: center; padding: clamp(48px, 8vw, 88px) var(--edge) clamp(24px, 4vw, 40px); }
 
   /* HANDWERK: dark · high contrast, largest type on the page */
@@ -281,8 +362,16 @@ const jsonLd = {
   /* --- CTA --- */
   .p-cta { position: relative; min-height: 60vh; display: flex; align-items: center; }
   .p-cta-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-  .p-cta-scrim { position: absolute; inset: 0; background: linear-gradient(to right, rgba(13,20,8,0.9), rgba(13,20,8,0.55)); }
-  .p-cta-inner { position: relative; z-index: 2; padding: 72px var(--edge); }
+  /* Inverted with the copy (see .p-cta-inner): the dark end has to sit under the text, or
+     the buttons land on the bright half of the photo. */
+  .p-cta-scrim { position: absolute; inset: 0; background: linear-gradient(to left, rgba(13,20,8,0.9), rgba(13,20,8,0.55)); }
+  /* Right-set — the last beat of the alternation. .p-cta is full-bleed, so margin-left:auto
+     plus this block's own --edge padding puts the copy one --edge in from the viewport edge,
+     matching Energie. Cap is the page's 640px measure plus that padding. */
+  .p-cta-inner {
+    position: relative; z-index: 2; padding: 72px var(--edge);
+    margin-left: auto; max-width: calc(640px + 2 * var(--edge));
+  }
   .p-cta-inner h2 { margin: 10px 0 28px; }
   .p-cta-links { display: flex; gap: 16px; flex-wrap: wrap; }
 </style>

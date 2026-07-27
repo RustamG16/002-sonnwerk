@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Pass 3: Tee card -> dried-herb-in-hands photo (cat jar goes to the gallery);
-gallery set for the infinite canvas page (max 900px long edge)."""
+"""Pass 3: gallery set for the infinite canvas page (max 900px long edge).
+Homepage bento uses Deocreme studio still — never write cat-tee / tee-bluete from farm grass shots."""
 import os
 from PIL import Image
 
@@ -26,10 +26,19 @@ def save(src, dst, ratio, width, q=82, fx=0.5, fy=0.5):
 
 B = lambda *p: os.path.join(G0, *p)
 
-# Tee: hands crumbling dried herb — reads "tea", no cliché, no cat
-tee = B('farm', '8Q3A5987-scaled.jpg')
-save(tee, os.path.join(MEDIA, 'products', 'tee-bluete.webp'), (1, 1), 1100, q=85, fx=0.55, fy=0.3)
-save(tee, os.path.join(MEDIA, 'products', 'cat-tee.webp'), (1, 1), 1100, q=85, fx=0.55, fy=0.3)
+# Deocreme — Bitzan studio still for the bento slot that used to be Tee
+deo = B('product', '©ApolloniaTheresaBitzan202511132248408Q3A6714-2-2048x2048.jpg')
+if not os.path.isfile(deo):
+    # Windows sometimes strips the © from the filename
+    deo = B('product', 'cApolloniaTheresaBitzan202511132248408Q3A6714-2-2048x2048.jpg')
+save(deo, os.path.join(MEDIA, 'products', 'deocreme.webp'), (1, 1), 1100, q=85)
+save(deo, os.path.join(MEDIA, 'products', 'cat-deocreme.webp'), (1, 1), 1100, q=85)
+# Ensure grass Tee assets stay gone
+for stale in ('cat-tee.webp', 'tee-bluete.webp'):
+    p = os.path.join(MEDIA, 'products', stale)
+    if os.path.isfile(p):
+        os.remove(p)
+        print('removed', stale)
 
 # Gallery: farm + production, mixed portrait/landscape
 GAL = os.path.join(MEDIA, 'galerie')
@@ -39,7 +48,7 @@ items = [
     (B('farm', '8Q3A5932-scaled-1.jpg'),'jungpflanze.webp',(1, 1), 0.5, 0.5),
     (B('farm', '8Q3A5987-scaled.jpg'),  'haende.webp',   (4, 3), 0.5, 0.35),
     (B('farm', '8Q3A6133-scaled.jpg'),  'hofkatze.webp', (4, 3), 0.3, 0.5),
-    (B('farm', 'Bud.jpg'),              'bluete.webp',   (4, 3), 0.5, 0.5),
+    (os.path.join(NANO, 'Hemp_plants_filling_frame_edge_202607270255.jpeg'), 'bluete.webp', (3, 4), 0.5, 0.5),
     (B('farm', '8Q3A5888-scaled-e1616013664921.jpg'), 'feldarbeit.webp', (4, 3), 0.5, 0.5),
     (B('farm', '13-8Q3A9263.jpg'),      'hof.webp',      (4, 3), 0.5, 0.5),
     (B('horse', '6-8Q3A8996.jpg'),      'pfluegen.webp', (3, 4), 0.55, 0.4),
@@ -47,12 +56,7 @@ items = [
     (B('horse', '65-8Q3A9853-980x653.jpg'), 'zaumzeug.webp', (4, 3), 0.5, 0.4),
     (B('horse', '9-8Q3A9182.jpg'),      'gespann.webp',  (4, 3), 0.5, 0.5),
     (B('horse', '69-8Q3A9873.jpg'),     'stall.webp',    (3, 4), 0.5, 0.5),
-    (os.path.join(NANO, '01_Field-Master.jpeg'),        'feld-morgen.webp', (16, 10), 0.5, 0.5),
-    (os.path.join(NANO, '03_Harvest-Hands_START.jpeg'), 'ernte.webp',       (4, 3), 0.5, 0.5),
-    (os.path.join(NANO, '05_Oil-Drop_START.jpeg'),      'extraktion.webp',  (4, 3), 0.5, 0.5),
-    (os.path.join(NANO, '07_Bottle-Reveal_START.jpeg'), 'flasche.webp',     (3, 4), 0.5, 0.5),
 ]
-for src, out, ratio, fx, fy in items:
-    w = 900 if ratio[0] >= ratio[1] else 680
-    save(src, os.path.join(GAL, out), ratio, w, q=78, fx=fx, fy=fy)
+for src, name, ratio, fx, fy in items:
+    save(src, os.path.join(GAL, name), ratio, 900 if ratio[0] >= ratio[1] else 675, fx=fx, fy=fy)
 print('done')
