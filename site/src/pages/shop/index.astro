@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../../lib/base';
 import Base from '../../layouts/Base.astro';
 import ProductCard from '../../components/ProductCard.astro';
 import { products, shopCategories } from '../../content/site';
@@ -8,8 +9,8 @@ import { products, shopCategories } from '../../content/site';
     <p class="eyebrow">Shop</p>
     <h1>Apotheke der Natur</h1>
     <nav class="pills" aria-label="Kategorien">
-      <a href="/shop/" class="pill active">Alle</a>
-      {shopCategories.map((c) => <a href={`/shop/${c.slug}/`} class="pill">{c.name}</a>)}
+      <a href={withBase('/shop/')} class="pill active">Alle</a>
+      {shopCategories.map((c) => <a href={withBase(`/shop/${c.slug}/`)} class="pill">{c.name}</a>)}
     </nav>
     <div class="grid">
       {products.map((p) => <ProductCard product={p} />)}

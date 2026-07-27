@@ -1,10 +1,12 @@
 ---
+import { withBase } from '../lib/base';
+
 import Base from '../layouts/Base.astro';
 import { brand } from '../content/site';
 
 const img = (slug: string) => ({
-  src: `/media/pferd/${slug}-1000.webp`,
-  srcset: `/media/pferd/${slug}-640.webp 640w, /media/pferd/${slug}-1000.webp 1000w, /media/pferd/${slug}-1600.webp 1600w`,
+  src: withBase(`/media/pferd/${slug}-1000.webp`),
+  srcset: `${withBase(`/media/pferd/${slug}-640.webp`)} 640w, ${withBase(`/media/pferd/${slug}-1000.webp`)} 1000w, ${withBase(`/media/pferd/${slug}-1600.webp`)} 1600w`,
 });
 
 const jsonLd = {
@@ -20,7 +22,7 @@ const jsonLd = {
   title="Arbeit Mit Dem Pferd | SONNWERK - Natur Die Wirkt"
   description="Warum echte Pferdestärken? Die Arbeit mit dem Pferd beim Hofkollektiv SONNWERK — Bodenschonung statt Traktor, Kultur, Tempo, Energie, Kreislauf und Handwerk."
   jsonLd={jsonLd}
-  ogImage="/media/pferd/hero-1600.webp"
+  ogImage={withBase('/media/pferd/hero-1600.webp')}
 >
   <main class="pferd">
     <header class="p-hero">
@@ -137,8 +139,8 @@ const jsonLd = {
         <p class="eyebrow reveal">Mitfahren</p>
         <h2 class="reveal">Sieh Dir das aus der Nähe an.</h2>
         <div class="p-cta-links reveal">
-          <a href="/hof/#kutschenfahrten" class="btn btn--solid">Kutschenfahrten anfragen</a>
-          <a href="/shop/" class="btn">Zum Shop</a>
+          <a href={withBase('/hof/#kutschenfahrten')} class="btn btn--solid">Kutschenfahrten anfragen</a>
+          <a href={withBase('/shop/')} class="btn">Zum Shop</a>
         </div>
       </div>
     </section>

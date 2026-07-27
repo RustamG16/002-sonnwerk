@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../lib/base';
 import Base from '../layouts/Base.astro';
 ---
 <Base title="Seite nicht gefunden | SONNWERK">
@@ -7,8 +8,8 @@ import Base from '../layouts/Base.astro';
     <h1>Diese Seite ist vom Feld abgekommen.</h1>
     <p class="dim">Die Seite, die Du suchst, gibt es nicht (mehr). Vielleicht hilft eine von diesen weiter.</p>
     <div class="links">
-      <a href="/shop/" class="btn btn--solid">Zum Shop</a>
-      <a href="/hof/" class="btn">Der Hof</a>
+      <a href={withBase('/shop/')} class="btn btn--solid">Zum Shop</a>
+      <a href={withBase('/hof/')} class="btn">Der Hof</a>
     </div>
   </main>
 </Base>

@@ -1,31 +1,32 @@
 ---
 import { brand } from '../content/site';
+import { withBase } from '../lib/base';
 const year = new Date().getFullYear();
 ---
 <footer>
   <div class="wrap grid">
     <div>
-      <img src="/logo-lang.png" alt="SONNWERK — Natur die wirkt" class="brandimg" width="280" loading="lazy" />
+      <img src={withBase('/logo-lang.png')} alt="SONNWERK — Natur die wirkt" class="brandimg" width="280" loading="lazy" />
       <p class="dim small">{brand.claim} BIO-CBD vom eigenen Hofkollektiv in Österreich.</p>
       <a href="https://www.instagram.com/hofkollektiv_sonnwerk/" class="dim small" target="_blank" rel="noopener noreferrer">Instagram @hofkollektiv_sonnwerk</a>
     </div>
     <nav aria-label="Shop">
       <p class="eyebrow">Shop</p>
-      <a href="/shop/">Alle Produkte</a>
-      <a href="/shop/oel/">Öle</a>
-      <a href="/shop/tierprodukte/">Tierprodukte</a>
+      <a href={withBase('/shop/')}>Alle Produkte</a>
+      <a href={withBase('/shop/oel/')}>Öle</a>
+      <a href={withBase('/shop/tierprodukte/')}>Tierprodukte</a>
     </nav>
     <nav aria-label="Hof">
       <p class="eyebrow">Hof</p>
-      <a href="/hof/">Unsere Story</a>
-      <a href="/arbeit-mit-dem-pferd/">Arbeit mit dem Pferd</a>
-      <a href="/hof/#kutschenfahrten">Kutschenfahrten</a>
+      <a href={withBase('/hof/')}>Unsere Story</a>
+      <a href={withBase('/arbeit-mit-dem-pferd/')}>Arbeit mit dem Pferd</a>
+      <a href={withBase('/hof/#kutschenfahrten')}>Kutschenfahrten</a>
     </nav>
     <nav aria-label="Rechtliches">
       <p class="eyebrow">Rechtliches</p>
-      <a href="/impressum/">Impressum</a>
-      <a href="/datenschutz/">Datenschutz</a>
-      <a href="/agb/">AGB</a>
+      <a href={withBase('/impressum/')}>Impressum</a>
+      <a href={withBase('/datenschutz/')}>Datenschutz</a>
+      <a href={withBase('/agb/')}>AGB</a>
     </nav>
   </div>
   <div class="wrap trust">

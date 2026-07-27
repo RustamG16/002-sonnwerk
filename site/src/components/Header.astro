@@ -1,20 +1,22 @@
 ---
+import { withBase } from '../lib/base';
+
 const links = [
-  { href: '/shop/', label: 'Shop' },
+  { href: withBase('/shop/'), label: 'Shop' },
   {
-    href: '/hof/', label: 'Der Hof',
+    href: withBase('/hof/'), label: 'Der Hof',
     children: [
-      { href: '/hof/', label: 'Der Hof' },
-      { href: '/arbeit-mit-dem-pferd/', label: 'Arbeit mit dem Pferd' },
-      { href: '/galerie/', label: 'Galerie' },
+      { href: withBase('/hof/'), label: 'Der Hof' },
+      { href: withBase('/arbeit-mit-dem-pferd/'), label: 'Arbeit mit dem Pferd' },
+      { href: withBase('/galerie/'), label: 'Galerie' },
     ],
   },
 ];
 ---
 <header class="site-header" data-site-header>
   <div class="bar">
-    <a href="/" class="logo serif">
-      <img src="/logo-mark.png" alt="" width="34" height="34" />
+    <a href={withBase('/')} class="logo serif">
+      <img src={withBase('/logo-mark.png')} alt="" width="34" height="34" />
       <span class="logo-word">SONN<span class="logo-apos">'</span><span class="gold">WERK</span></span>
     </a>
 

@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../lib/base';
 import Base from '../layouts/Base.astro';
 import AmbientMedia from '../components/AmbientMedia.astro';
 import { brand, journey, categories, principles, testimonials, ambient } from '../content/site';
@@ -18,14 +19,14 @@ const jsonLd = {
        JS-off / reduced-motion: poster + chapters render as static sections. -->
   <section class="journey" data-journey data-frames={framesJson}>
     <div class="stage">
-      <img class="poster" src="/media/journey/poster.webp" alt="Sonnenaufgang über dem Hanffeld" />
+      <img class="poster" src={withBase('/media/journey/poster.webp')} alt="Sonnenaufgang über dem Hanffeld" />
       <canvas data-journey-canvas aria-hidden="true"></canvas>
 
       <div class="hero-copy" data-chapter data-chapter-id="feld">
         <p class="eyebrow">Bio-CBD Hofkollektiv · Österreich</p>
         <h1>{brand.claim}</h1>
         <p class="sub">{brand.sub}</p>
-        <a href="/shop/" class="btn btn--solid">Jetzt bestellen</a>
+        <a href={withBase('/shop/')} class="btn btn--solid">Jetzt bestellen</a>
       </div>
 
       {journey.chapters.slice(1).map((c) => (
@@ -78,7 +79,7 @@ const jsonLd = {
       <div class="grid-bento">
         {categories.map((c) => (
           <a
-            href={c.href ?? `/shop/${c.slug}/`}
+            href={c.href ?? withBase(`/shop/${c.slug}/`)}
             class={`cat reveal cat--${c.slug} ${c.featured ? 'cat--featured' : ''}`}
             data-hover-loop={c.hoverLoop ?? ''}
           >
@@ -103,7 +104,7 @@ const jsonLd = {
     <div class="wrap inner">
       <h2 class="serif reveal">Auch für Deine Begleiter.</h2>
       <p class="dim reveal">Mild dosierte CBD-Produkte für Hunde — laborgeprüft, THC-frei. Entwickelt am Hof, wo Tiere zur Familie gehören.</p>
-      <a href="/shop/tierprodukte/" class="btn reveal">Tierprodukte entdecken</a>
+      <a href={withBase('/shop/tierprodukte/')} class="btn reveal">Tierprodukte entdecken</a>
     </div>
   </section>
 
@@ -112,15 +113,15 @@ const jsonLd = {
     <div class="galerie-teaser" data-parallax-teaser>
       <div class="wrap inner">
         <div class="thumbs" data-parallax-thumbs>
-          <img src="/media/galerie/pfluegen.webp" alt="" loading="lazy" data-parallax-item />
-          <img src="/media/galerie/hofkatze.webp" alt="" loading="lazy" data-parallax-item />
-          <img src="/media/galerie/extraktion.webp" alt="" loading="lazy" data-parallax-item />
+          <img src={withBase('/media/galerie/pfluegen.webp')} alt="" loading="lazy" data-parallax-item />
+          <img src={withBase('/media/galerie/hofkatze.webp')} alt="" loading="lazy" data-parallax-item />
+          <img src={withBase('/media/galerie/extraktion.webp')} alt="" loading="lazy" data-parallax-item />
         </div>
         <div class="text">
           <p class="eyebrow reveal">Galerie</p>
           <h2 class="reveal">Der Hof in Bildern.</h2>
           <p class="dim reveal">Feld, Pferde, Handarbeit — zieh Dich durch eine endlose Leinwand aus unserem Alltag.</p>
-          <a href="/galerie/" class="btn btn--ink reveal">Galerie öffnen</a>
+          <a href={withBase('/galerie/')} class="btn btn--ink reveal">Galerie öffnen</a>
         </div>
       </div>
     </div>

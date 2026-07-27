@@ -1,15 +1,16 @@
 ---
+import { withBase } from '../lib/base';
 import { euro, type Product } from '../content/site';
 import HoverMedia from './HoverMedia.astro';
 interface Props { product: Product }
 const { product } = Astro.props;
 ---
 <article class="card reveal">
-  <a href={`/produkt/${product.slug}/`} class="media-wrap">
+  <a href={withBase(`/produkt/${product.slug}/`)} class="media-wrap">
     <HoverMedia poster={product.image} alt={product.name} loopKey={product.category} />
   </a>
   <div class="body">
-    <h3 class="serif"><a href={`/produkt/${product.slug}/`}>{product.name}</a></h3>
+    <h3 class="serif"><a href={withBase(`/produkt/${product.slug}/`)}>{product.name}</a></h3>
     <p class="dim short">{product.short}</p>
     <div class="row">
       <span class="price gold serif">{euro(product.price)}</span>
